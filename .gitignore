@@ -1,0 +1,53 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+
+# Finder / Spotlight
+.Spotlight-V100
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.tmp
+
+# Logs
+*.log
+
+# Environment / local config
+.env
+.env.*
+!.env.example
+
+# Build / generated output
+dist/
+build/
+out/
+.cache/
+
+# Node / package managers, in case tooling gets added later
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Python, in case validation scripts get added later
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# OS / archive noise
+*.zip
+*.tar
+*.tar.gz
+*.tgz
