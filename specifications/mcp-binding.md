@@ -1,6 +1,6 @@
 # MCP Binding
 
-The ACFS MCP binding defines an optional mapping between ACFS records and MCP
+The ACFS MCP binding defines an optional projection from ACFS records into MCP
 resources or tools.
 
 ACFS is not an MCP extension and does not require MCP. MCP is one possible
@@ -13,7 +13,7 @@ retrieval, or revocation rules.
 
 An MCP server MAY expose ACFS records as resources, tools, prompts, or a
 combination of those surfaces. The server remains responsible for enforcing ACFS
-rules before records influence agent behavior.
+projection rules before records influence agent behavior.
 
 ## Resource URIs
 
@@ -28,6 +28,10 @@ acfs://{authority}/{scope}/{type}/{id}?rev={revision}
 
 Implementations MAY use implementation-native URIs when documented.
 
+MCP resource URIs are projection addresses. They SHOULD remain traceable to the
+source ACFS record identifiers that govern lifecycle, scope, authority, risk,
+and revocation.
+
 ## Resources
 
 An ACFS-MCP implementation MAY expose:
@@ -39,7 +43,7 @@ An ACFS-MCP implementation MAY expose:
 - Conformance declarations
 
 Behavioral resource listings SHOULD include only records that are eligible for
-behavioral guidance under ACFS retrieval rules.
+behavioral guidance under ACFS retrieval and projection rules.
 
 Audit resource listings MAY include non-Active records when explicitly requested
 and authorized.
@@ -85,9 +89,10 @@ validation SHOULD NOT create behavioral guidance.
 
 ACFS-MCP implementations:
 
-- MUST support ACFS-Core
+- MUST support ACFS-Core and ACFS-Projection
 - MUST enforce lifecycle, scope, authority, risk, retrieval, and revocation rules
 - MUST NOT expose Revoked records as behavioral guidance
+- SHOULD preserve traceability from MCP artifacts to source ACFS records
 - SHOULD expose conformance information
 - SHOULD provide stable resource URIs
 - SHOULD distinguish behavioral retrieval from audit retrieval

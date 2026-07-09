@@ -80,6 +80,21 @@ An ACFS-Retrieval implementation MUST support ACFS-Core and MUST:
 ACFS-Retrieval implementations SHOULD support filters for type, scope, lifecycle
 state, authority, risk, provenance, recency, and relation.
 
+## ACFS-Projection
+
+ACFS-Projection covers policy-governed external views of records.
+
+An ACFS-Projection implementation MUST support ACFS-Core and MUST:
+
+- Treat ACFS records as the source of truth
+- Prevent Revoked records from being projected as behavioral guidance
+- Preserve lifecycle, scope, authority, risk, and revocation rules during projection
+- Distinguish behavioral projection from audit projection
+
+ACFS-Projection implementations SHOULD preserve traceability from projected
+artifacts to source records and SHOULD define projection policy for each exposed
+surface.
+
 ## ACFS-Audit
 
 ACFS-Audit covers durable history and explanation.
@@ -102,9 +117,9 @@ Audit history SHOULD be protected from unauthorized modification.
 
 ACFS-MCP covers optional exposure through MCP.
 
-An ACFS-MCP implementation MUST support ACFS-Core and MUST ensure that MCP
-resource or tool availability does not override ACFS lifecycle, scope,
-authority, risk, retrieval, or revocation rules.
+An ACFS-MCP implementation MUST support ACFS-Core and ACFS-Projection, and MUST
+ensure that MCP resource or tool availability does not override ACFS lifecycle,
+scope, authority, risk, retrieval, projection, or revocation rules.
 
 ACFS-MCP implementations SHOULD follow `specifications/mcp-binding.md`.
 
