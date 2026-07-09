@@ -46,6 +46,11 @@ Rejected records MAY remain available for audit, review history, or future recon
 
 A Rejected record SHOULD include a rejection reason when available.
 
+Invalid submissions are not Rejected Capability Records unless an implementation
+chooses to preserve them as structurally valid records with an error payload.
+Failed structural validation SHOULD be represented as validation results or audit
+events rather than behavioral records.
+
 ## Active
 
 An Active record has been accepted for use within its declared scope.
@@ -104,7 +109,6 @@ Implementations MUST NOT allow lifecycle transitions to bypass authority, scope,
 Common lifecycle transitions include:
 
 - Submitted -> Validated
-- Submitted -> Rejected
 - Validated -> Rejected
 - Validated -> Active
 - Active -> Superseded
@@ -112,6 +116,25 @@ Common lifecycle transitions include:
 - Active -> Revoked
 - Deprecated -> Revoked
 - Superseded -> Revoked
+
+Implementations MAY support additional transitions when documented.
+
+## Transition Metadata
+
+Lifecycle transitions SHOULD be recorded as append-only events.
+
+Transition events SHOULD include:
+
+| From | To | Actor | Required metadata |
+| --- | --- | --- | --- |
+| Submitted | Validated | Capability Store or validator | validation timestamp, validation result |
+| Validated | Rejected | Reviewer or policy | reason, authority, reviewer or policy identifier |
+| Validated | Active | Reviewer or policy | reason, authority, reviewer or policy identifier |
+| Active | Superseded | Reviewer or policy | reason, `superseded_by` record identifier when available |
+| Active | Deprecated | Reviewer or policy | reason, migration or replacement guidance when available |
+| Active | Revoked | Authority or authorized reviewer | reason, actor, timestamp, affected scope |
+| Deprecated | Revoked | Authority or authorized reviewer | reason, actor, timestamp, affected scope |
+| Superseded | Revoked | Authority or authorized reviewer | reason, actor, timestamp, affected scope |
 
 Implementations MAY support additional transitions when documented.
 
@@ -143,6 +166,7 @@ ACFS-compatible implementations that support lifecycle state:
 - MUST distinguish validation from acceptance
 - MUST prevent Revoked records from guiding future behavior
 - SHOULD preserve lifecycle transition history
+- SHOULD represent lifecycle changes as transition events rather than silent mutation
 - SHOULD require review for high-risk records before activation
 - SHOULD expose lifecycle state during retrieval
 - MUST NOT allow lifecycle state to override scope, authority, or revocation rules

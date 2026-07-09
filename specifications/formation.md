@@ -38,12 +38,34 @@ These record types are not required to follow a single linear path. A policy may
 
 Implementations MAY promote related records through formation paths such as:
 
-	```
-    Observation
-      -> Correction
-      -> Procedure
-      -> Skill
-      -> Policy
-	```
+```text
+Observation
+  -> Correction
+  -> Procedure
+  -> Skill
+  -> Policy
+```
 
 This path is illustrative, not mandatory. Capability formation is not required to be linear. Implementations MAY form capabilities from any supported record type when provenance, scope, authority, lifecycle state, and evidence requirements are preserved.
+
+## Promotion Requirements
+
+Promotion is the act of allowing one or more records to influence future
+behavior as a stronger or more reusable capability.
+
+When promoting a record into an Active procedure, skill, policy, or other
+behavior-shaping record, implementations SHOULD require:
+
+- Source records referenced through `derived_from`, `corrects`, `supersedes`, or
+  evidence relations
+- Supporting evidence or a documented reason when evidence is unavailable
+- Scope and Authority confirmation
+- Risk classification
+- Review or policy approval appropriate to the risk level
+- Verification notes when the record describes a repeatable behavior
+
+Promotion MUST preserve provenance. A promoted record MUST NOT erase or replace
+the source records that justified it.
+
+High-risk promotion SHOULD require explicit review by an authorized Reviewer or
+Authority.

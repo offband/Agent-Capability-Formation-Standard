@@ -47,6 +47,36 @@ Capability Stores SHOULD support retrieval filters for:
 
 Implementations MAY support additional filters.
 
+## Retrieval Response Envelope
+
+Retrieval responses SHOULD identify whether the result is intended for
+behavioral guidance or audit inspection.
+
+Recommended response shape:
+
+```json
+{
+  "mode": "behavioral",
+  "scope": "repository:github.com/example/project",
+  "records": [],
+  "omitted": {
+    "revoked": 0,
+    "out_of_scope": 0,
+    "unauthorized": 0,
+    "unsupported_extension": 0
+  },
+  "warnings": []
+}
+```
+
+The `omitted` object helps Consumers distinguish “no relevant records exist”
+from “records exist but were excluded by lifecycle, scope, authority, policy, or
+extension rules.”
+
+Behavioral retrieval MUST NOT include Revoked records in `records`.
+
+Audit retrieval SHOULD make its audit purpose explicit through `mode`.
+
 ## Scope
 
 Consumers MUST NOT apply a retrieved record outside its declared scope unless an authorized Reviewer or policy explicitly broadens that scope.
@@ -107,5 +137,6 @@ ACFS-compatible implementations that support retrieval:
 - MUST NOT return Revoked records for behavioral guidance
 - MUST NOT allow retrieval to bypass scope, authority, or lifecycle rules
 - SHOULD distinguish behavioral retrieval from audit retrieval
+- SHOULD expose retrieval mode and omission or warning metadata
 - SHOULD expose relation metadata when requested
 - SHOULD allow Consumers to identify superseded, deprecated, or revoked records during audit retrieval

@@ -1,0 +1,31 @@
+{
+  "id": "acfs:record:proc-bootstrap-agent-001",
+  "type": "procedure",
+  "lifecycle": "active",
+  "scope": "repository:github.com/offband/offband-agents",
+  "authority": "organization:offband",
+  "title": "Bootstrap an agent from durable context",
+  "body": "Read ACFS/FlowOS startup context, select a relevant ability, prefer fabric-backed status checks, and record any missing durable knowledge before final response.",
+  "risk": "medium",
+  "provenance": {
+    "contributor": "agent",
+    "submitted_at": "2026-07-09T02:18:06Z",
+    "source": "accepted ability-bank proposal"
+  },
+  "relations": {
+    "supersedes": [],
+    "superseded_by": [],
+    "corrects": [],
+    "contradicts": [],
+    "depends_on": [],
+    "derived_from": [
+      "acfs:record:obs-offband-mcp-001"
+    ],
+    "evidence_for": [],
+    "evidence_against": []
+  },
+  "metadata": {
+    "acfs_version": "0.1",
+    "verification": "FlowOS backend probe succeeded"
+  }
+}

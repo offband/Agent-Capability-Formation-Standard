@@ -1,0 +1,218 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent-capability-formation-standard.org/schemas/capability-record.schema.json",
+  "title": "ACFS Capability Record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "type",
+    "lifecycle",
+    "scope",
+    "authority",
+    "title",
+    "body",
+    "risk",
+    "provenance",
+    "relations",
+    "metadata"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "observation",
+        "correction",
+        "decision",
+        "procedure",
+        "skill",
+        "policy",
+        "run_result",
+        "evidence",
+        "deprecation"
+      ]
+    },
+    "lifecycle": {
+      "type": "string",
+      "enum": [
+        "submitted",
+        "validated",
+        "rejected",
+        "active",
+        "superseded",
+        "deprecated",
+        "revoked"
+      ]
+    },
+    "scope": {
+      "oneOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "$ref": "#/$defs/scope"
+        }
+      ]
+    },
+    "authority": {
+      "oneOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "$ref": "#/$defs/authority"
+        }
+      ]
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "body": {
+      "type": "string"
+    },
+    "risk": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ]
+    },
+    "provenance": {
+      "$ref": "#/$defs/provenance"
+    },
+    "relations": {
+      "$ref": "#/$defs/relations"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "$defs": {
+    "scope": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "type",
+        "id"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "path": {
+          "type": "string"
+        },
+        "valid_from": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "valid_until": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "type",
+        "id"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "contributor",
+        "submitted_at",
+        "source"
+      ],
+      "properties": {
+        "contributor": {
+          "type": "string",
+          "minLength": 1
+        },
+        "submitted_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "relations": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "supersedes",
+        "superseded_by",
+        "corrects",
+        "contradicts",
+        "depends_on",
+        "derived_from",
+        "evidence_for",
+        "evidence_against"
+      ],
+      "properties": {
+        "supersedes": {
+          "$ref": "#/$defs/relationArray"
+        },
+        "superseded_by": {
+          "$ref": "#/$defs/relationArray"
+        },
+        "corrects": {
+          "$ref": "#/$defs/relationArray"
+        },
+        "contradicts": {
+          "$ref": "#/$defs/relationArray"
+        },
+        "depends_on": {
+          "$ref": "#/$defs/relationArray"
+        },
+        "derived_from": {
+          "$ref": "#/$defs/relationArray"
+        },
+        "evidence_for": {
+          "$ref": "#/$defs/relationArray"
+        },
+        "evidence_against": {
+          "$ref": "#/$defs/relationArray"
+        }
+      }
+    },
+    "relationArray": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  }
+}

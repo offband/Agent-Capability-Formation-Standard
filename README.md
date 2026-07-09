@@ -116,4 +116,25 @@ An ACFS-compatible implementation preserves the standard requirements for Capabi
 
 Implementations MAY use files, databases, graph stores, object storage, content-addressed storage, or other persistence mechanisms.
 
-Future versions may define standard transports, schemas, compatibility profiles, and reference implementation behavior.
+This repository includes additional specifications for record shape, lifecycle,
+formation, relations, retrieval, scope and authority, architecture, conformance,
+versioning, MCP binding, and trust and safety.
+
+Implementations SHOULD use the JSON Schema and examples in this repository when
+validating basic Capability Record compatibility.
+
+## Repository Map
+
+- `specifications/capability-records.md`: minimal record shape and field rules
+- `specifications/lifecycle.md`: lifecycle states and transition expectations
+- `specifications/formation.md`: promotion from durable records into reusable capability
+- `specifications/relations.md`: governed relation graph between records
+- `specifications/retrieval.md`: behavioral and audit retrieval semantics
+- `specifications/scope-and-authority.md`: scope, authority, and inheritance rules
+- `specifications/architecture.md`: component boundaries and responsibilities
+- `specifications/conformance.md`: compatibility profiles
+- `specifications/versioning-and-extensions.md`: extension and versioning rules
+- `specifications/mcp-binding.md`: optional MCP transport mapping
+- `security/trust-and-safety.md`: trust boundary, privacy, retention, and safety guidance
+- `schemas/capability-record.schema.json`: JSON Schema for basic record validation
+- `examples/`: valid and invalid examples

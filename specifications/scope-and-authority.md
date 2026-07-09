@@ -24,6 +24,37 @@ Examples of scope include:
 
 Implementations MAY support additional scope types.
 
+## Scope Format
+
+Implementations MAY represent scope as a string or structured object.
+
+String scopes SHOULD be stable and unambiguous, for example:
+
+```text
+repository:github.com/example/project
+organization:example
+user:alice
+node:node04
+workflow:release
+```
+
+Structured scopes SHOULD use this shape:
+
+```json
+{
+  "type": "repository",
+  "id": "github.com/example/project",
+  "path": "optional/subscope",
+  "valid_from": "2026-07-09T00:00:00Z",
+  "valid_until": "2026-08-09T00:00:00Z"
+}
+```
+
+The `type` and `id` fields identify the boundary. `path`, `valid_from`, and
+`valid_until` are OPTIONAL refinements.
+
+Implementations SHOULD document supported scope types and matching behavior.
+
 ## Scope Boundaries
 
 Consumers MUST NOT apply a Capability Record outside its declared scope unless an authorized Reviewer or policy explicitly broadens that scope.
@@ -37,6 +68,26 @@ For example, a procedure accepted for one repository does not automatically appl
 Authority identifies the person, organization, policy boundary, or system responsible for trust decisions within a scope.
 
 A Capability Record MUST identify an Authority.
+
+Implementations MAY represent Authority as a string or structured object.
+
+String Authorities SHOULD be stable and unambiguous, for example:
+
+```text
+organization:example
+user:alice
+policy:example/security-review
+system:flowos-policy-engine
+```
+
+Structured Authorities SHOULD use this shape:
+
+```json
+{
+  "type": "organization",
+  "id": "example"
+}
+```
 
 Authority determines who may:
 

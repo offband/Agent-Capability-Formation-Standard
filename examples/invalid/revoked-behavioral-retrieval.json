@@ -1,0 +1,32 @@
+{
+  "mode": "behavioral",
+  "scope": "repository:github.com/offband/offband-agents",
+  "records": [
+    {
+      "id": "acfs:record:invalid-revoked-guidance",
+      "type": "policy",
+      "lifecycle": "revoked",
+      "scope": "repository:github.com/offband/offband-agents",
+      "authority": "organization:offband",
+      "title": "Invalid revoked behavioral guidance",
+      "body": "A revoked record must not be returned as behavioral guidance.",
+      "risk": "high",
+      "provenance": {
+        "contributor": "agent",
+        "submitted_at": "2026-07-09T02:18:06Z",
+        "source": "invalid retrieval example"
+      },
+      "relations": {
+        "supersedes": [],
+        "superseded_by": [],
+        "corrects": [],
+        "contradicts": [],
+        "depends_on": [],
+        "derived_from": [],
+        "evidence_for": [],
+        "evidence_against": []
+      },
+      "metadata": {}
+    }
+  ]
+}

@@ -145,9 +145,19 @@ Durable records may preserve sensitive, personal, regulated, or stale informatio
 
 Implementations SHOULD support retention policy, redaction, and deletion behavior.
 
-Records containing secrets, credentials, private keys, tokens, sensitive personal data, regulated data, or unsafe instructions SHOULD be rejected, redacted, restricted, or marked high risk according to scope policy.
+Records containing secrets, credentials, private keys, or tokens MUST NOT be
+stored as behavioral guidance. They MUST be rejected, redacted, or restricted to
+authorized audit handling according to scope policy.
+
+Records containing sensitive personal data, regulated data, or unsafe
+instructions SHOULD be rejected, redacted, restricted, or marked high risk
+according to scope policy.
 
 Revocation excludes a record from behavioral guidance. Deletion or redaction removes or obscures stored content according to retention and privacy policy.
+
+Redaction SHOULD preserve enough audit metadata to explain what changed, who
+performed the redaction, when it occurred, and why the original content is no
+longer available.
 
 Implementations SHOULD document whether deleted or redacted records remain visible in audit history.
 

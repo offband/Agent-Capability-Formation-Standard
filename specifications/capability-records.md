@@ -37,9 +37,25 @@ A Capability Record MUST include the following fields:
       "metadata": {}
     }
 
+The `relations` object MAY contain empty arrays when no relationships are
+declared, but the object itself MUST be preserved by ACFS-compatible systems.
+
 ## Required Fields
 
 The `id` field identifies the record. It MUST be stable and unique within the Capability Store.
+
+Implementations SHOULD use identifiers that can be safely referenced across
+exports, audit logs, relations, and transports. Recommended forms include:
+
+- `acfs:record:{stable-id}`
+- `acfs://{authority}/{scope}/{type}/{stable-id}`
+- implementation-native identifiers that are documented and stable within the
+  Capability Store
+
+Human-readable identifiers MAY be used when stable. Content-addressed identifiers
+MAY be used when the record body is immutable. Implementations that use
+content-addressed identifiers SHOULD define how lifecycle state and transition
+history are addressed.
 
 The `type` field identifies the kind of record being submitted.
 
@@ -138,6 +154,25 @@ The `metadata` object MAY contain implementation-specific fields.
 
 Implementation-specific metadata MUST NOT be required for basic ACFS compatibility unless declared by a separate compatibility profile.
 
+## Revision and Immutability
+
+Capability Records SHOULD be treated as append-oriented durable state.
+
+Implementations MAY expose an editable current view, but they SHOULD preserve
+enough revision or transition history to explain prior record content, lifecycle
+state, scope, authority, relations, and provenance.
+
+Substantive content changes SHOULD create a new revision or a new Capability
+Record related through `supersedes`, `superseded_by`, `corrects`, or
+`derived_from`.
+
+Lifecycle changes SHOULD be recorded as transition events rather than silent
+mutation.
+
+Implementations MUST NOT silently rewrite an Active, Deprecated, Superseded, or
+Revoked record in a way that hides the record state that previously guided agent
+behavior.
+
 ## Requirements
 
 ACFS-compatible implementations that support Capability Records:
@@ -146,6 +181,7 @@ ACFS-compatible implementations that support Capability Records:
 - MUST preserve lifecycle state
 - MUST preserve scope and authority
 - MUST preserve provenance
-- SHOULD preserve relation metadata
-- SHOULD preserve risk classification
+- MUST preserve the `relations` object
+- MUST preserve risk classification
+- SHOULD preserve revision or transition history for substantive record changes
 - MUST NOT allow metadata or relations to bypass lifecycle, authority, scope, or revocation rules

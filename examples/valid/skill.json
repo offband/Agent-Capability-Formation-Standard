@@ -1,0 +1,33 @@
+{
+  "id": "acfs:record:skill-agent-context-bootstrap-001",
+  "type": "skill",
+  "lifecycle": "validated",
+  "scope": "repository:github.com/offband/offband-agents",
+  "authority": "organization:offband",
+  "title": "Agent context bootstrap",
+  "body": "A reusable behavior for binding a new agent to durable FlowOS context before ad hoc shell discovery.",
+  "risk": "high",
+  "provenance": {
+    "contributor": "agent",
+    "submitted_at": "2026-07-09T02:18:06Z",
+    "source": "procedure promotion candidate"
+  },
+  "relations": {
+    "supersedes": [],
+    "superseded_by": [],
+    "corrects": [],
+    "contradicts": [],
+    "depends_on": [
+      "acfs:record:proc-bootstrap-agent-001"
+    ],
+    "derived_from": [
+      "acfs:record:proc-bootstrap-agent-001"
+    ],
+    "evidence_for": [],
+    "evidence_against": []
+  },
+  "metadata": {
+    "acfs_version": "0.1",
+    "review_required": true
+  }
+}
