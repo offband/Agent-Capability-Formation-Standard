@@ -123,6 +123,20 @@ scope, authority, risk, retrieval, projection, or revocation rules.
 
 ACFS-MCP implementations SHOULD follow `specifications/mcp-binding.md`.
 
+## ACFS-Fabric
+
+ACFS-Fabric covers optional live coordination state for agent identity,
+sessions, task leases, coordination events, receipts, and context-pack
+projections.
+
+ACFS-Fabric implementations MUST support ACFS-Core and ACFS-Projection, and
+MUST keep Capability Records as the authority layer. Fabric entities coordinate
+work; they do not become behavioral guidance unless they are formed into
+Capability Records or governed projections under ACFS rules.
+
+ACFS-Fabric implementations SHOULD follow
+`specifications/fabric-coordination.md`.
+
 ## ACFS-Portable
 
 ACFS-Portable covers exchange between implementations.
