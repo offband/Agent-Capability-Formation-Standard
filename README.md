@@ -132,6 +132,7 @@ validating basic Capability Record compatibility.
 - `specifications/retrieval.md`: behavioral and audit retrieval semantics
 - `specifications/projection.md`: policy-governed external views of records
 - `specifications/workflow-artifacts.md`: optional workflow artifact extension
+- `specifications/fabric-coordination.md`: optional coordination fabric extension
 - `specifications/scope-and-authority.md`: scope, authority, and inheritance rules
 - `specifications/architecture.md`: component boundaries and responsibilities
 - `specifications/conformance.md`: compatibility profiles
