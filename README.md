@@ -1,143 +1,173 @@
 # Agent Capability Formation Standard
 
-The Agent Capability Formation Standard (ACFS) defines how agentic systems preserve, govern, and reuse durable records that allow agents to develop knowledge, refine behavior, and form reusable abilities over time.
+ACFS defines a durable record primitive for agent workspaces.
 
-ACFS is concerned with durable state produced through agentic work. This state may include observations, corrections, decisions, procedures, skills, policies, run evidence, and other records that allow future agents and adjacent systems to build on prior work rather than reconstructing behavior from context alone.
+The goal of ACFS vNext is simple: an agent should be able to persist and recall
+the durable facts that make a workspace reliable across sessions, reboots, model
+changes, and tool boundaries. Those records may capture memory, decisions,
+standards, evidence, issues, handoffs, and draft capabilities.
 
-ACFS does not define how agents interact with external systems. It defines how agentic systems retain, govern, revise, and reuse contributed knowledge, behavior, and abilities over time.
+ACFS is not a chat history format, storage engine, app framework, or
+inter-agent message bus. It defines how agent-contributed records are written,
+addressed, scoped, recalled, superseded, revoked, and promoted into reusable
+capability.
+
+ACFS is the portable standard. Implementations such as FlowOS may provide the
+runtime that saves, updates, executes, reviews, packages, and presents ACFS
+records and capabilities. Runtime objects such as artifacts, actions, runs,
+triggers, packages, and UI state are valid implementation concepts when they map
+cleanly to ACFS records, relations, metadata, or documented extensions at the
+portable boundary.
 
 ## Requirement Language
 
-The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL NOT”, “SHOULD”, “SHOULD NOT”, “RECOMMENDED”, “NOT RECOMMENDED”, “MAY”, and “OPTIONAL” in ACFS documents are to be interpreted as described in BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all capitals.
+The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL NOT”, “SHOULD”,
+“SHOULD NOT”, “RECOMMENDED”, “NOT RECOMMENDED”, “MAY”, and “OPTIONAL” in ACFS
+documents are to be interpreted as described in BCP 14 [RFC2119] [RFC8174]
+when, and only when, they appear in all capitals.
 
-## Overview
+## Core Primitive
 
-Agentic systems do not only consume context or call external tools. Over time, they produce observations, corrections, procedures, policies, skills, evidence, and other records that may influence future behavior.
+An ACFS Record is a durable, typed object written to an ACFS-compatible store
+so future agents can quickly recall relevant workspace context instead of
+reconstructing it from large prompt files or prior chat.
 
-Without a shared structure for retaining and governing these records, each agent, host, or tool must reconstruct useful behavior from isolated context. ACFS defines a standard for preserving agent-contributed state so future systems can evaluate, retrieve, revise, and reuse it.
+The base profile is **ACFS-Records**. It requires only the fields needed for
+durable recall and safe behavioral use:
 
-ACFS is not a storage engine, memory product, agent framework, or tool-calling protocol. It defines the lifecycle and governance model for agent-contributed state as it becomes future capability.
+```json
+{
+  "id": "acfs:record:workspace:decision:example",
+  "kind": "decision",
+  "status": "active",
+  "scope": "workspace:example",
+  "title": "Use ACFS Records as the base primitive",
+  "body": "ACFS vNext centers on durable records and recall. Capability governance is an optional profile.",
+  "provenance": {
+    "actor": "agent",
+    "created_at": "2026-08-15T00:00:00Z",
+    "source": "design session"
+  }
+}
+```
 
-## Basic Concepts
+## Record Kinds
 
-ACFS defines state management between the following roles:
+The initial record kinds are:
 
-- **Contributor**: an agent, user, tool, service, or other system that submits a capability record.
-- **Capability Store**: a system that receives capability records and is responsible for validation, indexing, persistence, retrieval, and lifecycle state.
-- **Reviewer**: a user, policy engine, trusted agent, or system process that evaluates capability records and changes their lifecycle state.
-- **Consumer**: an agent, host, tool, service, or other system that retrieves capability records for future use.
-- **Authority**: the person, organization, policy boundary, or system responsible for determining trust within a scope.
+- **memory**: durable project context, repeated facts, or user preferences.
+- **decision**: a choice that future agents should respect inside scope.
+- **standard**: a rule, convention, interface, or invariant for future work.
+- **capability**: a reusable behavior, skill, script, deterministic prompt, or
+  workflow candidate.
+- **evidence**: support for or against another record or capability.
+- **handoff**: concise continuity context for the next agent/session.
+- **issue**: a durable blocker, risk, bug, or unresolved question.
 
-A single implementation may combine multiple roles, but ACFS treats these responsibilities as distinct concepts.
+Implementations MAY define additional kinds when documented.
 
-## Capability Records
+## Status
 
-A Capability Record is the core primitive of ACFS. It is a durable, typed object submitted into an ACFS-compatible system so that agentic work can be retained, evaluated, retrieved, and revised over time.
+The base status values are:
 
-A Capability Record is not always a complete capability. It is a durable record that may contribute to future knowledge, behavior, policy, procedure, or reusable ability.
+- **draft**: captured but not default guidance.
+- **active**: eligible for behavioral recall inside scope.
+- **superseded**: replaced by a newer active record.
+- **revoked**: withdrawn and MUST NOT guide future behavior.
 
-Capability Records may include, but are not limited to:
-
-- Observations
-- Corrections
-- Decisions
-- Procedures
-- Skills
-- Policies
-- Run results
-- Evidence
-- Deprecations
-
-Each Capability Record MUST have a stable identifier, a record type, a lifecycle state, scope, authority, provenance metadata, and relationship metadata.
-
-A Capability Record MUST define the scope in which it may influence future behavior. Consumers MUST NOT apply a record outside its declared scope unless an authorized reviewer or policy explicitly broadens that scope.
+Draft records are useful for capture and review. Active records are the default
+behavioral memory. Superseded records remain useful for audit. Revoked records
+must not appear in behavioral recall.
 
 ## Capability Formation
 
-ACFS treats durable records as inputs to capability formation. Implementations MAY promote related records through formation paths such as:
+Agents may draft capabilities when repeated behavior emerges. A capability can
+reference a skill, script, deterministic prompt, workflow, or external artifact,
+but executable or behavior-shaping capabilities MUST NOT become default
+behavioral guidance until explicitly promoted by policy, user approval, or an
+authorized review path.
 
-- Observation
-- Correction
-- Procedure
-- Skill
-- Policy
-
-Promotion MUST preserve provenance and SHOULD retain links to supporting evidence. A promoted record MUST NOT erase the source records that justified it.
-
-## Lifecycle
-
-Capability Records move through explicit lifecycle states. Lifecycle state determines whether a record may be retrieved, trusted, applied, ignored, corrected, deprecated, superseded, or revoked.
-
-Initial lifecycle states are:
-
-- **Submitted**: the record has been received but has not yet been validated.
-- **Validated**: the record satisfies the structural requirements of the standard.
-- **Rejected**: the record is structurally valid but has not been accepted for future use.
-- **Active**: the record has been accepted for use within its defined scope.
-- **Superseded**: the record has been replaced by a newer or more authoritative record.
-- **Deprecated**: the record remains available for historical or audit purposes but SHOULD NOT be used for new agent work.
-- **Revoked**: the record has been withdrawn from use and MUST NOT guide future agent behavior.
-
-Validation does not imply that a record is true, trusted, or approved for future use.
+This preserves the useful part of the original ACFS idea: agents can form
+capabilities over time without turning every durable note into executable trust.
 
 ## Retrieval
 
-By default, Consumers SHOULD retrieve Active records within the requested scope.
+ACFS retrieval should feel like recall, not archive browsing.
 
-Deprecated and Superseded records MAY be returned when explicitly requested. Revoked records MUST NOT be returned for behavioral guidance, but MAY be returned for audit purposes.
+The common path is:
 
-Retrieval SHOULD support filtering by type, scope, lifecycle state, authority, provenance, recency, and relation.
+1. At task start, request `recall` or a `state_capsule` for the workspace/task.
+2. During work, write only durable records future agents can reuse.
+3. At task end, write a handoff or superseding record when continuity requires
+   it.
 
-## Relationship to MCP
+Default behavioral recall returns active, scoped, non-revoked records. Audit
+retrieval may expose drafts, superseded records, and revoked records only when
+explicitly requested and authorized.
 
-ACFS is not a replacement for MCP.
+## Relationship to MCP and Skills
 
-MCP defines how applications expose context, tools, prompts, and related capabilities to AI systems. ACFS defines how durable records from agents and related systems are written, classified, governed, revised, and made available for future use.
+ACFS is transport-neutral. MCP is one useful agent-facing transport that an
+ACFS-compatible implementation, such as FlowOS, may expose.
 
-An ACFS implementation MAY expose ACFS operations through MCP tools, resources, or prompts. However, ACFS lifecycle state, authority, scope, and revocation rules remain binding regardless of transport.
+An implementation exposing ACFS records through MCP should keep the
+ACFS-standard surface small:
 
-## Security and Trust
+```text
+acfs.write_record
+acfs.get_record
+acfs.search
+acfs.recall
+acfs.state_capsule
+acfs.supersede
+acfs.promote_capability
+acfs.conformance
+```
 
-Durable agent-contributed records can influence future agent behavior. ACFS implementations MUST treat record writing, promotion, retrieval, correction, and deletion as security-sensitive operations.
+A skill should teach the agent the behavior: recall first, write durable records
+when useful, draft capabilities when repeated behavior appears, and avoid using
+unpromoted executable drafts.
 
-ACFS records are not passive storage. A Capability Record may affect what a future agent believes, what procedure it follows, what skill it loads, what policy it respects, or what ability it attempts to use.
+A plugin or skill may teach ACFS workflow and schemas. Live durable storage
+belongs to an implementation, such as FlowOS, not to ACFS itself.
 
-ACFS implementations SHOULD preserve provenance, enforce scope boundaries, support revocation, and apply least privilege to record operations.
+## Profiles
 
-Implementations SHOULD classify records by risk. Observations and evidence are generally lower risk. Decisions, corrections, and procedures may affect behavior and require review. Skills, policies, authority changes, triggers, and records that can cause future actions are high risk and SHOULD require review before becoming Active.
+- **ACFS-Records**: minimum durable record and recall profile.
+- **ACFS-Capabilities**: optional profile for draft/promoted capabilities and
+  artifact references.
+- **ACFS-Governance**: optional profile for review, authority, risk, lifecycle
+  events, status history, and promotion policy.
+- **ACFS-Relations**: optional profile for richer record graphs.
+- **ACFS-Retrieval**: optional profile for recall, search, state capsules, and
+  audit retrieval.
+- **ACFS-MCP**: optional profile for MCP tools/resources.
+- **ACFS-Portable**: optional profile for import/export.
 
-Implementations SHOULD consider risks such as unauthorized writes, contribution poisoning, unsafe promotion, stale records, sensitive data persistence, unclear authority, and cross-agent propagation of unreviewed records.
-
-## Implementation
-
-ACFS does not require a specific runtime, transport, storage engine, or agent framework.
-
-An ACFS-compatible implementation preserves the standard requirements for Capability Records, lifecycle state, provenance, scope, retrieval, correction, and revocation.
-
-Implementations MAY use files, databases, graph stores, object storage, content-addressed storage, or other persistence mechanisms.
-
-This repository includes additional specifications for record shape, lifecycle,
-formation, relations, retrieval, projection, scope and authority, architecture,
-conformance, versioning, MCP binding, and trust and safety.
-
-Implementations SHOULD use the JSON Schema and examples in this repository when
-validating basic Capability Record compatibility.
+Legacy ACFS 0.1 capability records remain compatible through the governed
+capability profile. Implementations may accept legacy `type/lifecycle` records
+and map them to `kind/status` records.
 
 ## Repository Map
 
-- `specifications/capability-records.md`: minimal record shape and field rules
-- `specifications/lifecycle.md`: lifecycle states and transition expectations
-- `specifications/formation.md`: promotion from durable records into reusable capability
-- `specifications/relations.md`: governed relation graph between records
-- `specifications/retrieval.md`: behavioral and audit retrieval semantics
-- `specifications/projection.md`: policy-governed external views of records
-- `specifications/workflow-artifacts.md`: optional workflow artifact extension
-- `specifications/fabric-coordination.md`: optional coordination fabric extension
-- `specifications/scope-and-authority.md`: scope, authority, and inheritance rules
-- `specifications/architecture.md`: component boundaries and responsibilities
-- `specifications/conformance.md`: compatibility profiles
-- `specifications/versioning-and-extensions.md`: extension and versioning rules
+- `specifications/records.md`: ACFS vNext base record shape and field rules
+- `specifications/capability-records.md`: legacy governed capability profile
+- `specifications/lifecycle.md`: status and promotion expectations
+- `specifications/formation.md`: capability drafting and promotion
+- `specifications/relations.md`: sparse relation model
+- `specifications/retrieval.md`: recall, search, state capsules, and audit
 - `specifications/mcp-binding.md`: optional MCP transport mapping
-- `security/trust-and-safety.md`: trust boundary, privacy, retention, and safety guidance
-- `schemas/capability-record.schema.json`: JSON Schema for basic record validation
+- `specifications/agent-packaging.md`: skill/plugin packaging guidance
+- `specifications/projection.md`: behavioral and audit projections
+- `specifications/scope-and-authority.md`: scope and optional authority
+- `specifications/implementation-boundary.md`: standard/runtime boundary and
+  mappings for artifacts, actions, runs, triggers, and packages
+- `specifications/conformance.md`: compatibility profiles
+- `specifications/versioning-and-extensions.md`: extension/version rules
+- `specifications/workflow-artifacts.md`: optional executable workflow artifacts
+- `specifications/fabric-coordination.md`: optional coordination fabric
+  extension
+- `security/trust-and-safety.md`: durable record safety guidance
+- `schemas/acfs-record.schema.json`: ACFS vNext record schema
+- `schemas/capability-record.schema.json`: legacy governed record schema
 - `examples/`: valid and invalid examples

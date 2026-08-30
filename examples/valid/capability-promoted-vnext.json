@@ -1,0 +1,28 @@
+{
+  "id": "acfs:record:example:capability:release-checklist-v2",
+  "kind": "capability",
+  "status": "active",
+  "scope": "workspace:example",
+  "title": "Release checklist",
+  "body": "Run checks that verify required tests, documentation updates, and package artifacts are present before publishing a release.",
+  "relations": [
+    {
+      "type": "supersedes",
+      "target": "acfs:record:example:capability:release-checklist"
+    },
+    {
+      "type": "evidence_for",
+      "target": "acfs:record:example:evidence:release-checklist-passed"
+    }
+  ],
+  "metadata": {
+    "artifact_type": "script",
+    "artifact_ref": "scripts/release_checklist.sh",
+    "runtime_constraints": "sandboxed"
+  },
+  "provenance": {
+    "actor": "operator",
+    "created_at": "2026-08-15T00:00:00Z",
+    "source": "capability promotion review"
+  }
+}

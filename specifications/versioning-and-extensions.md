@@ -7,17 +7,18 @@ records or forcing every implementation to support every feature.
 
 ACFS documents SHOULD identify the standard version or revision they target.
 
-Capability Records MAY include a standard version in metadata:
+Records MAY include a standard version in metadata:
 
 ```json
 {
   "metadata": {
-    "acfs_version": "0.1"
+    "acfs_version": "vNext"
   }
 }
 ```
 
-Implementations SHOULD document which ACFS version or revision they support.
+Implementations SHOULD document which ACFS version, revision, and conformance
+profiles they support.
 
 ## Record Compatibility
 
@@ -25,22 +26,45 @@ Implementations MUST preserve required fields even when they do not understand
 all optional or implementation-specific metadata.
 
 Unknown metadata fields SHOULD be preserved during import, export, retrieval,
-revision, and lifecycle transitions unless policy requires removal.
+revision, and status changes unless policy requires removal.
 
 Unknown relation types SHOULD NOT be treated as behavioral guidance unless the
 implementation understands their meaning.
+
+## Compatibility Profiles
+
+ACFS vNext uses named profiles so simple implementations can stay small.
+
+Base implementations SHOULD claim `ACFS-Records`.
+
+Implementations MAY additionally claim:
+
+- `ACFS-Capabilities`
+- `ACFS-Governance`
+- `ACFS-Relations`
+- `ACFS-MCP`
+- `ACFS-Portable`
+- `ACFS-Legacy-Capability-Records`
+
+See `specifications/conformance.md` for profile requirements.
 
 ## Extensions
 
 Implementations MAY define extensions.
 
+Extensions are the preferred way to standardize runtime concepts that prove
+useful across implementations. Do not add a concept to the ACFS base profile
+only because one implementation uses it internally. First document how the
+concept maps to records, relations, metadata, recall behavior, and safety
+boundaries.
+
 Extensions SHOULD declare:
 
-- Extension name
-- Version
-- Required conformance profiles
-- Added record fields, metadata fields, relation types, or lifecycle behavior
-- Whether the extension is optional or mandatory for records that use it
+- Extension name.
+- Version.
+- Required conformance profiles.
+- Added record fields, metadata fields, relation types, or status behavior.
+- Whether the extension is optional or mandatory for records that use it.
 
 Extension fields SHOULD be namespaced to avoid collision.
 
@@ -75,12 +99,20 @@ clearly named conformance profile.
 
 Implementations SHOULD provide migration guidance when record shapes change.
 
+Legacy ACFS 0.1 `type/lifecycle` records MAY be imported into vNext by mapping
+them to `kind/status` records. Implementations SHOULD preserve the original
+fields in metadata when audit fidelity matters.
+
 ## Requirements
 
 ACFS-compatible implementations:
 
-- MUST preserve required fields across version boundaries
-- SHOULD preserve unknown optional metadata
-- SHOULD document supported ACFS versions and extensions
-- SHOULD reject, quarantine, or restrict records that require unsupported mandatory extensions
-- MUST NOT allow unknown extensions to bypass lifecycle, scope, authority, risk, retrieval, or revocation rules
+- MUST preserve required fields across version boundaries.
+- SHOULD preserve unknown optional metadata.
+- SHOULD document supported ACFS versions, profiles, and extensions.
+- SHOULD document implementation-specific runtime concepts that are not part of
+  the ACFS base profile.
+- SHOULD reject, quarantine, or restrict records that require unsupported
+  mandatory extensions.
+- MUST NOT allow unknown extensions to bypass status, scope, authority, risk,
+  retrieval, or revocation rules.

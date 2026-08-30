@@ -1,0 +1,13 @@
+{
+  "id": "acfs:record:workspace:legacy-lifecycle",
+  "kind": "decision",
+  "lifecycle": "active",
+  "scope": "workspace:example",
+  "title": "Legacy lifecycle without status",
+  "body": "This record is invalid for ACFS-Records because vNext requires status.",
+  "provenance": {
+    "actor": "codex",
+    "created_at": "2026-08-15T00:00:00Z",
+    "source": "example"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "id": "acfs:record:example:memory:old-release-branch-guidance",
+  "kind": "memory",
+  "status": "revoked",
+  "scope": "workspace:example",
+  "title": "Old release branch guidance",
+  "body": "This record is retained only for audit. It must not guide future release branch selection.",
+  "relations": [
+    {
+      "type": "supersedes",
+      "target": "acfs:record:example:memory:release-build-root"
+    }
+  ],
+  "provenance": {
+    "actor": "codex",
+    "created_at": "2026-08-15T00:00:00Z",
+    "source": "revocation example"
+  }
+}

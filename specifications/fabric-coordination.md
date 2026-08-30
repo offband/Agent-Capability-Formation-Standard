@@ -9,10 +9,10 @@ This extension is named `acfs.fabric.v1`.
 
 ## Purpose
 
-ACFS defines durable Capability Records and policy-governed projections. Some
-agent systems also need short-lived coordination state so multiple agents can
-share context, avoid duplicate work, ask questions, acknowledge work, and expose
-their activity to an operator.
+ACFS defines durable records and policy-governed projections. Some agent
+systems also need short-lived coordination state so multiple agents can share
+context, avoid duplicate work, ask questions, acknowledge work, and expose their
+activity to an operator.
 
 Fabric coordination MAY be used for:
 
@@ -24,25 +24,24 @@ Fabric coordination MAY be used for:
 - append-only coordination events
 - context packs composed from ACFS records and projections
 
-Fabric coordination MUST NOT replace Capability Records, lifecycle governance,
-scope, authority, retrieval, projection, or audit requirements.
+Fabric coordination MUST NOT replace ACFS Records, status governance, scope,
+authority, retrieval, projection, or audit requirements.
 
-## Relationship To Capability Records
+## Relationship To ACFS Records
 
-Fabric entities are adjunct coordination primitives. They are not Capability
-Records unless an implementation explicitly stores a fabric entity as a
-Capability Record using the standard record shape.
+Fabric entities are adjunct coordination primitives. They are not ACFS Records
+unless an implementation explicitly stores a fabric entity using the standard
+record shape.
 
-Fabric state MAY contribute to Capability Records. For example:
+Fabric state MAY contribute to ACFS Records. For example:
 
-- a completed task claim MAY produce `run_result` or `evidence` records
-- an agent message MAY become an `observation`, `decision`, or `correction`
-  after review
-- a repeated successful coordination pattern MAY become a `procedure`
-- a conflict MAY produce evidence for supersession, correction, deprecation, or
-  revocation
+- a completed task claim MAY produce an `evidence` record
+- an agent message MAY become a `memory`, `decision`, or `issue` record after
+  review
+- a repeated successful coordination pattern MAY become a `capability` draft
+- a conflict MAY produce evidence for correction, supersession, or revocation
 
-When fabric state contributes to a Capability Record, the record SHOULD preserve
+When fabric state contributes to an ACFS Record, the record SHOULD preserve
 traceability to the fabric subject, event, claim, session, or context pack that
 informed it.
 
@@ -51,14 +50,14 @@ informed it.
 Implementations that support `acfs.fabric.v1` MUST preserve this boundary:
 
 ```text
-Capability Records remain authority.
+ACFS Records remain authority.
 Fabric entities coordinate work.
 Projections expose governed views.
 Events and audit explain what happened.
 ```
 
-Fabric state MUST NOT make a record Active, broaden a record's scope, change a
-record's authority, override lifecycle state, or allow Revoked records to guide
+Fabric state MUST NOT make a record active, broaden a record's scope, change a
+record's authority, override status, or allow revoked records to guide
 future behavior.
 
 ## Entity Families
@@ -161,8 +160,8 @@ Common lanes MAY include:
 - `projection`
 
 Fabric events MAY be used for operator visibility, audit support, and later
-formation into Capability Records. Event payloads MUST NOT bypass ACFS review
-or lifecycle requirements before guiding future behavior.
+formation into ACFS Records. Event payloads MUST NOT bypass ACFS review or
+status requirements before guiding future behavior.
 
 ### Message And Receipt
 
@@ -196,15 +195,15 @@ A context pack SHOULD include:
 - redaction metadata
 
 The source trace SHOULD identify source records, projections, evidence, or other
-inputs with stable identifiers, URIs, digests, lifecycle state, scope, authority,
-and risk when available.
+inputs with stable identifiers, URIs, digests, status, scope, authority, and
+risk when available.
 
 Context packs intended for behavioral guidance MUST follow ACFS behavioral
 projection rules. Revoked records MUST NOT be included as behavioral guidance.
 
 ## Write Constraints
 
-Public or hosted fabric write operations SHOULD require:
+Shared or remote fabric write operations SHOULD require:
 
 - authorization for the specific operation
 - idempotency keys for retryable mutations
@@ -241,7 +240,7 @@ audit inspection.
 Fabric coordination MAY be exposed through MCP tools, HTTP APIs, local user
 interfaces, files, event streams, or other transports.
 
-Transport availability MUST NOT override ACFS lifecycle, scope, authority, risk,
+Transport availability MUST NOT override ACFS status, scope, authority, risk,
 retrieval, projection, or revocation rules.
 
 Tools that create, renew, release, or mutate fabric state SHOULD enforce
@@ -252,16 +251,15 @@ operation-specific authorization and SHOULD emit fabric events or audit history.
 `acfs.fabric.v1` is an optional extension. Implementations that claim support
 for this extension:
 
-- MUST support ACFS-Core and ACFS-Projection.
-- MUST preserve the boundary between Capability Records and fabric coordination
+- MUST support ACFS-Records.
+- MUST preserve the boundary between ACFS Records and fabric coordination
   state.
-- MUST NOT allow fabric state to bypass lifecycle, scope, authority, risk,
+- MUST NOT allow fabric state to bypass status, scope, authority, risk,
   retrieval, projection, or revocation rules.
 - SHOULD expose stable identifiers for agents, sessions, claims, events,
   receipts, and context packs.
 - SHOULD preserve source traceability from context packs to source records and
   projections.
 - SHOULD preserve enough audit or event history to explain fabric mutations.
-- SHOULD require idempotency for public hosted write mutations.
+- SHOULD require idempotency for shared or remote write mutations.
 - SHOULD document retention, redaction, quota, and rate-limit behavior.
-

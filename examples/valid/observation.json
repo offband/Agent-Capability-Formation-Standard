@@ -1,17 +1,17 @@
 {
-  "id": "acfs:record:obs-offband-mcp-001",
+  "id": "acfs:record:obs-build-check-001",
   "type": "observation",
   "lifecycle": "active",
   "scope": {
     "type": "repository",
-    "id": "github.com/offband/offband-agents"
+    "id": "github.com/example/project"
   },
   "authority": {
     "type": "organization",
-    "id": "offband"
+    "id": "example-org"
   },
-  "title": "FlowOS backend is the active MCP surface",
-  "body": "The FlowOS ability bank backend is the supported MCP surface for durable context in the Offband fabric.",
+  "title": "Build check completed",
+  "body": "The release validation command completed successfully for the example project.",
   "risk": "low",
   "provenance": {
     "contributor": "agent",

@@ -1,0 +1,12 @@
+{
+  "id": "acfs:record:workspace:memory:missing-scope",
+  "kind": "memory",
+  "status": "active",
+  "title": "Missing scope",
+  "body": "This record is invalid because ACFS vNext requires a scope.",
+  "provenance": {
+    "actor": "codex",
+    "created_at": "2026-08-15T00:00:00Z",
+    "source": "example"
+  }
+}

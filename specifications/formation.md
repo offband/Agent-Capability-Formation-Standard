@@ -1,71 +1,84 @@
 # Capability Formation
 
-Capability formation is the process by which durable records produced through agentic work become reusable future capability.
+Capability formation is the process by which durable records become reusable
+future behavior.
 
-ACFS does not assume that every record is itself a capability. An observation, correction, run result, or evidence record may only become useful when it is linked to other records, reviewed within a scope, and promoted into a procedure, skill, policy, or other reusable form.
+ACFS vNext treats formation as an optional layer over ACFS Records. The base
+primitive captures and recalls records. The capability layer promotes repeated,
+observed, or reviewed behavior into active capability.
 
-## Purpose
+## Inputs
 
-Agentic systems often repeat useful work without retaining the structure that made the work successful. ACFS defines formation so that useful agent behavior can be preserved without relying on hidden chat history, unstructured memory, or one-off context reconstruction.
+Formation may use any ACFS Record kind, especially:
 
-Capability formation allows systems to:
+- `memory`: repeated context or preference.
+- `decision`: selected direction.
+- `standard`: invariant or convention.
+- `evidence`: proof or counterproof.
+- `handoff`: continuity from prior work.
+- `issue`: recurring blocker or risk.
+- `capability`: draft behavior to refine and promote.
 
-- Capture useful agent work as durable records
-- Link related records into reusable patterns
-- Preserve evidence and provenance during promotion
-- Review records before they influence future behavior
-- Revise, supersede, or revoke capabilities as conditions change
+## Capability Records
 
-## Formation Inputs
+A capability record describes a reusable behavior. It may reference a skill,
+script, deterministic prompt, workflow, procedure, or external artifact.
 
-A Capability Record may contribute to formation even when it is not itself a complete capability.
+Example:
 
-Formation inputs may include:
-
-- **Observation**: a recorded fact, pattern, condition, or repeated behavior
-- **Correction**: a recorded change to prior behavior, language, assumption, or process
-- **Decision**: a recorded choice made within a defined scope
-- **Procedure**: a repeatable sequence of steps
-- **Skill**: a reusable behavior or operational pattern
-- **Policy**: a rule that constrains future behavior
-- **Run result**: the outcome of a completed agentic action
-- **Evidence**: support for or against another record
-- **Deprecation**: a record indicating that another record should no longer guide new work
-
-These record types are not required to follow a single linear path. A policy may be formed from evidence and decisions. A skill may be formed from repeated procedures. A correction may supersede a procedure. A run result may support or contradict an existing skill.
-
-## Formation Path
-
-Implementations MAY promote related records through formation paths such as:
-
-```text
-Observation
-  -> Correction
-  -> Procedure
-  -> Skill
-  -> Policy
+```json
+{
+  "kind": "capability",
+  "status": "draft",
+  "title": "Run payment-link smoke checks",
+  "metadata": {
+    "artifact_type": "script",
+    "artifact_ref": "scripts/stripe_smoke_check.sh",
+    "runtime_constraints": "approval-required"
+  }
+}
 ```
 
-This path is illustrative, not mandatory. Capability formation is not required to be linear. Implementations MAY form capabilities from any supported record type when provenance, scope, authority, lifecycle state, and evidence requirements are preserved.
+## Draft First
 
-## Promotion Requirements
+Agents MAY draft capabilities when repeated behavior emerges.
 
-Promotion is the act of allowing one or more records to influence future
-behavior as a stronger or more reusable capability.
+Executable or behavior-shaping capabilities SHOULD remain draft until promoted
+by explicit approval or policy.
 
-When promoting a record into an Active procedure, skill, policy, or other
-behavior-shaping record, implementations SHOULD require:
+Draft capabilities SHOULD NOT be returned by default behavioral recall.
 
-- Source records referenced through `derived_from`, `corrects`, `supersedes`, or
-  evidence relations
-- Supporting evidence or a documented reason when evidence is unavailable
-- Scope and Authority confirmation
-- Risk classification
-- Review or policy approval appropriate to the risk level
-- Verification notes when the record describes a repeatable behavior
+## Promotion
 
-Promotion MUST preserve provenance. A promoted record MUST NOT erase or replace
-the source records that justified it.
+Promotion makes a draft capability active.
 
-High-risk promotion SHOULD require explicit review by an authorized Reviewer or
-Authority.
+Promotion SHOULD preserve:
+
+- Source records or evidence.
+- Actor or reviewer.
+- Timestamp.
+- Reason.
+- Runtime constraints.
+
+High-risk capabilities MUST require explicit authorization before becoming
+active.
+
+## Runtime Constraints
+
+Capability artifacts that execute code, invoke tools, touch production systems,
+handle credentials, affect financial/legal/security workflows, or broaden
+authority MUST declare or inherit runtime constraints.
+
+Agents MUST NOT treat a promoted capability as permission to bypass host
+sandbox, user approval, tool policy, or workspace restrictions.
+
+## Requirements
+
+ACFS-Capabilities implementations:
+
+- MUST represent reusable behavior as `kind=capability`.
+- MUST prevent draft executable capabilities from default behavioral use.
+- SHOULD preserve source records and evidence during promotion.
+- MUST require explicit authorization for high-risk activation.
+- MUST NOT allow artifact references to bypass status, scope, revocation, or
+  runtime constraints.

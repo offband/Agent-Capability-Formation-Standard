@@ -2,9 +2,9 @@
   "id": "acfs:record:policy-old-runtime-revocation-001",
   "type": "policy",
   "lifecycle": "revoked",
-  "scope": "repository:github.com/offband/offband-agents",
-  "authority": "organization:offband",
-  "title": "Do not use retired MCP runtime",
+  "scope": "repository:github.com/example/project",
+  "authority": "organization:example-org",
+  "title": "Do not use retired release procedure",
   "body": "This policy record is revoked as an example and must not guide future behavior.",
   "risk": "high",
   "provenance": {
@@ -25,7 +25,7 @@
   "metadata": {
     "acfs_version": "0.1",
     "revocation": {
-      "actor": "organization:offband",
+      "actor": "organization:example-org",
       "timestamp": "2026-07-09T02:18:06Z",
       "reason": "Example revoked record"
     }

@@ -2,13 +2,13 @@
   "id": "acfs:record:invalid-missing-scope",
   "type": "observation",
   "lifecycle": "submitted",
-  "authority": "organization:offband",
+  "authority": "organization:example-org",
   "title": "Invalid record without scope",
   "body": "This record is missing the required scope field.",
   "risk": "low",
   "provenance": {
     "contributor": "agent",
-    "submitted_at": "2026-07-09T02:18:06Z",
+        "submitted_at": "2026-07-09T02:18:06Z",
     "source": "invalid example"
   },
   "relations": {

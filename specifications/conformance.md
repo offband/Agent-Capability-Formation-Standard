@@ -1,125 +1,87 @@
 # Conformance
 
-Conformance defines how implementations describe which ACFS requirements they
-support.
+Conformance defines how implementations describe which ACFS vNext requirements
+they support.
 
-ACFS is intended to support small local stores, agent runtimes, MCP-backed
-servers, hosted services, and audit-oriented archives. Not every implementation
-needs every optional capability, but implementations that claim compatibility
-MUST state which conformance profiles they support.
+ACFS is intended to support local workspace stores, MCP-backed services, hosted
+platforms, and portable archives. Implementations SHOULD publish a conformance
+declaration that lists supported profiles and extensions.
 
-## Profile Declarations
+## ACFS-Records
 
-An implementation SHOULD publish a conformance declaration.
+ACFS-Records is the minimum compatibility profile.
 
-A conformance declaration SHOULD include:
+An ACFS-Records implementation MUST:
 
-- Implementation name and version
-- ACFS version or revision targeted
-- Supported conformance profiles
-- Supported record types
-- Supported lifecycle states
-- Supported retrieval modes
-- Storage and transport notes
-- Extension fields or compatibility profiles required for use
+- Preserve required ACFS Record fields.
+- Validate record structure.
+- Preserve status and scope.
+- Preserve provenance.
+- Prevent revoked records from guiding future behavior.
+- Distinguish behavioral recall from audit retrieval.
+- Support import/export of records using the vNext record shape.
 
-## ACFS-Core
+## ACFS-Capabilities
 
-ACFS-Core is the minimum compatibility profile.
+ACFS-Capabilities covers reusable behavior formed from records.
 
-An ACFS-Core implementation MUST:
+An ACFS-Capabilities implementation MUST support ACFS-Records and MUST:
 
-- Preserve required Capability Record fields
-- Validate record structure
-- Preserve lifecycle state
-- Preserve scope and authority
-- Preserve provenance
-- Preserve risk classification
-- Preserve the `relations` object
-- Prevent Revoked records from guiding future behavior
-- Distinguish validation from acceptance
+- Represent capability drafts as `kind=capability`.
+- Prevent draft executable or behavior-shaping capabilities from default
+  behavioral recall/use.
+- Require explicit promotion before executable capabilities become active.
+- Preserve artifact references and runtime constraints when present.
+- Preserve provenance from source records, evidence, or review.
 
-ACFS-Core implementations SHOULD support import and export of Capability Records
-using the standard record shape.
+## ACFS-Governance
 
-## ACFS-Review
+ACFS-Governance covers review, authority, risk, and transition history.
 
-ACFS-Review covers review and lifecycle governance.
+An ACFS-Governance implementation MUST support ACFS-Records and MUST:
 
-An ACFS-Review implementation MUST support ACFS-Core and MUST:
-
-- Support lifecycle transitions
-- Preserve transition history
-- Distinguish Contributors from Reviewers and Authorities
-- Require authorized review or policy approval for high-risk activation
-- Preserve reasons for rejection, promotion, deprecation, supersession, and revocation when available
+- Preserve authority and risk when supplied or required by policy.
+- Preserve review and promotion events.
+- Distinguish contributors from reviewers or authorities.
+- Require authorized review for high-risk activation.
+- Preserve reasons for rejection, promotion, supersession, and revocation when
+  available.
 
 ## ACFS-Relations
 
 ACFS-Relations covers governed record graphs.
 
-An ACFS-Relations implementation MUST support ACFS-Core and MUST:
+An ACFS-Relations implementation MUST support ACFS-Records and MUST:
 
-- Preserve declared relation type and target record identifiers
-- Expose relation metadata during retrieval when requested
-- Prevent relations from bypassing lifecycle, scope, authority, risk, or revocation rules
+- Preserve relation type and target record identifier.
+- Expose relation metadata during retrieval when requested.
+- Prevent relations from bypassing status, scope, authority, risk, or revocation
+  rules.
 
 ACFS-Relations implementations SHOULD support reverse relation lookup.
 
 ## ACFS-Retrieval
 
-ACFS-Retrieval covers behavioral and audit retrieval.
+ACFS-Retrieval covers behavioral recall, search, state capsules, and audit
+retrieval.
 
-An ACFS-Retrieval implementation MUST support ACFS-Core and MUST:
+An ACFS-Retrieval implementation MUST support ACFS-Records and MUST:
 
-- Distinguish behavioral retrieval from audit retrieval
-- Prevent Revoked records from behavioral retrieval
-- Enforce scope and authority during retrieval
-- Expose lifecycle state in retrieval results
+- Distinguish behavioral recall from audit retrieval.
+- Prevent revoked records from behavioral recall.
+- Expose status in retrieval results.
+- Enforce scope during behavioral recall.
 
-ACFS-Retrieval implementations SHOULD support filters for type, scope, lifecycle
-state, authority, risk, provenance, recency, and relation.
-
-## ACFS-Projection
-
-ACFS-Projection covers policy-governed external views of records.
-
-An ACFS-Projection implementation MUST support ACFS-Core and MUST:
-
-- Treat ACFS records as the source of truth
-- Prevent Revoked records from being projected as behavioral guidance
-- Preserve lifecycle, scope, authority, risk, and revocation rules during projection
-- Distinguish behavioral projection from audit projection
-
-ACFS-Projection implementations SHOULD preserve traceability from projected
-artifacts to source records and SHOULD define projection policy for each exposed
-surface.
-
-## ACFS-Audit
-
-ACFS-Audit covers durable history and explanation.
-
-An ACFS-Audit implementation MUST support ACFS-Core and MUST preserve enough
-history to explain:
-
-- Record creation
-- Validation results
-- Review decisions
-- Lifecycle transitions
-- Scope changes
-- Authority changes
-- Relation changes
-- Supersession, deprecation, revocation, deletion, and redaction events
-
-Audit history SHOULD be protected from unauthorized modification.
+ACFS-Retrieval implementations SHOULD support filters for kind, scope, status,
+authority, risk, tags, recency, and relation.
 
 ## ACFS-MCP
 
 ACFS-MCP covers optional exposure through MCP.
 
-An ACFS-MCP implementation MUST support ACFS-Core and ACFS-Projection, and MUST
-ensure that MCP resource or tool availability does not override ACFS lifecycle,
-scope, authority, risk, retrieval, projection, or revocation rules.
+An ACFS-MCP implementation MUST support ACFS-Records and MUST ensure MCP tools
+or resources do not override ACFS status, scope, promotion, retrieval, or
+revocation rules.
 
 ACFS-MCP implementations SHOULD follow `specifications/mcp-binding.md`.
 
@@ -129,31 +91,61 @@ ACFS-Fabric covers optional live coordination state for agent identity,
 sessions, task leases, coordination events, receipts, and context-pack
 projections.
 
-ACFS-Fabric implementations MUST support ACFS-Core and ACFS-Projection, and
-MUST keep Capability Records as the authority layer. Fabric entities coordinate
-work; they do not become behavioral guidance unless they are formed into
-Capability Records or governed projections under ACFS rules.
+ACFS-Fabric implementations MUST support ACFS-Records and MUST keep ACFS
+Records as the authority layer. Fabric entities coordinate work; they do not
+become behavioral guidance unless they are formed into ACFS Records or governed
+projections under ACFS rules.
 
 ACFS-Fabric implementations SHOULD follow
 `specifications/fabric-coordination.md`.
+
+## ACFS-Packaging
+
+ACFS-Packaging covers optional distribution as skills, plugins, implementation
+packages, or combined installable bundles.
+
+An ACFS-Packaging implementation MUST support ACFS-Records and MUST:
+
+- Document whether the package is skills-only, implementation-backed, or
+  combined.
+- Distinguish workflow instructions from live durable storage.
+- Prevent packaging metadata from bypassing ACFS status, scope, promotion,
+  authorization, or revocation rules.
+
+ACFS-Packaging implementations SHOULD:
+
+- Keep main skill instructions focused.
+- Put detailed schemas, examples, and implementation notes in references.
+- Include positive and negative activation tests.
+- Expose skill, plugin, or packaging version in conformance metadata when
+  available.
+- Follow `specifications/agent-packaging.md`.
 
 ## ACFS-Portable
 
 ACFS-Portable covers exchange between implementations.
 
-An ACFS-Portable implementation MUST support ACFS-Core and SHOULD:
+An ACFS-Portable implementation MUST support ACFS-Records and SHOULD:
 
-- Export records using the standard record shape
-- Preserve required fields, lifecycle state, scope, authority, provenance, risk,
-  and relations during import/export
-- Document extension fields
-- Reject or quarantine records that require unsupported mandatory extensions
+- Export records using the vNext record shape.
+- Preserve required fields and known optional fields.
+- Document extension fields.
+- Reject, quarantine, or mark audit-only records that require unsupported
+  mandatory extensions.
+
+## Legacy ACFS 0.1
+
+Implementations MAY claim compatibility with the legacy Capability Record
+profile described in `specifications/capability-records.md`.
+
+Legacy compatibility is not required for ACFS-Records.
 
 ## Requirements
 
 Implementations claiming ACFS compatibility:
 
-- MUST support ACFS-Core
-- MUST document which optional profiles are supported
-- MUST NOT claim support for a profile unless the profile requirements are met
-- SHOULD expose conformance information to administrators, integrators, or Consumers
+- MUST support ACFS-Records.
+- MUST document supported optional profiles.
+- MUST NOT claim support for a profile unless profile requirements are met.
+- SHOULD expose conformance information to administrators, integrators, and
+  agents.

@@ -1,42 +1,32 @@
 # Scope and Authority
 
-Scope and Authority define where a Capability Record may apply and who is responsible for trust decisions within that boundary.
+Scope defines where an ACFS Record may influence future behavior.
 
-ACFS treats scope as security-critical. A record that is useful in one project, user context, repository, organization, node, workflow, or time window may be unsafe or incorrect in another.
+Authority identifies who is responsible for trust decisions within a scope.
+Authority is optional in the base ACFS-Records profile and required only by
+governance profiles or workspace policy.
 
 ## Scope
 
-Scope defines the boundary in which a Capability Record may influence future behavior.
+Every ACFS Record MUST declare a scope.
 
-A Capability Record MUST declare a scope.
+Examples:
 
-Examples of scope include:
+- `workspace:example`
+- `repository:github.com/example/project`
+- `organization:example`
+- `user:alice`
+- `tool:stripe`
+- `workflow:release`
 
-- User
-- Project
-- Repository
-- Organization
-- Workflow
-- Tool
-- Node
-- Domain
-- Time window
-
-Implementations MAY support additional scope types.
+Consumers MUST NOT apply a record outside its declared scope unless an explicit
+policy or authorized reviewer broadens that scope.
 
 ## Scope Format
 
 Implementations MAY represent scope as a string or structured object.
 
-String scopes SHOULD be stable and unambiguous, for example:
-
-```text
-repository:github.com/example/project
-organization:example
-user:alice
-node:node04
-workflow:release
-```
+String scopes SHOULD be stable and unambiguous.
 
 Structured scopes SHOULD use this shape:
 
@@ -45,33 +35,21 @@ Structured scopes SHOULD use this shape:
   "type": "repository",
   "id": "github.com/example/project",
   "path": "optional/subscope",
-  "valid_from": "2026-07-09T00:00:00Z",
-  "valid_until": "2026-08-09T00:00:00Z"
+  "valid_from": "2026-08-15T00:00:00Z",
+  "valid_until": "2026-09-15T00:00:00Z"
 }
 ```
 
 The `type` and `id` fields identify the boundary. `path`, `valid_from`, and
-`valid_until` are OPTIONAL refinements.
-
-Implementations SHOULD document supported scope types and matching behavior.
-
-## Scope Boundaries
-
-Consumers MUST NOT apply a Capability Record outside its declared scope unless an authorized Reviewer or policy explicitly broadens that scope.
-
-A record declared for one scope does not automatically apply to parent, child, sibling, or adjacent scopes.
-
-For example, a procedure accepted for one repository does not automatically apply to every repository in the same organization. A policy accepted for one user does not automatically apply to all users.
+`valid_until` are optional refinements.
 
 ## Authority
 
-Authority identifies the person, organization, policy boundary, or system responsible for trust decisions within a scope.
+Authority MAY be included on any ACFS Record and SHOULD be included when a
+record changes future behavior, promotes a capability, broadens scope, or
+affects high-risk work.
 
-A Capability Record MUST identify an Authority.
-
-Implementations MAY represent Authority as a string or structured object.
-
-String Authorities SHOULD be stable and unambiguous, for example:
+Authorities may be strings or structured objects:
 
 ```text
 organization:example
@@ -80,99 +58,34 @@ policy:example/security-review
 system:flowos-policy-engine
 ```
 
-Structured Authorities SHOULD use this shape:
-
 ```json
-{
-  "type": "organization",
-  "id": "example"
-}
+{"type": "organization", "id": "example"}
 ```
 
-Authority determines who may:
+ACFS-Governance implementations MUST distinguish the actor that submitted a
+record from the authority or reviewer that promoted it.
 
-- Accept or reject records
-- Promote records to Active
-- Broaden or narrow scope
-- Supersede, deprecate, or revoke records
-- Define review requirements
-- Resolve conflicts between records
+## Nested Scope
 
-## Reviewers
+Nested scope inheritance MUST NOT be assumed unless the implementation defines
+explicit inheritance rules.
 
-A Reviewer acts on behalf of an Authority.
-
-A Reviewer may be a user, policy engine, trusted agent, service, or system process.
-
-Implementations MUST distinguish between the Contributor that submits a record and the Authority or Reviewer that accepts it for use.
-
-A Contributor is not automatically authorized to promote its own record.
-
-## Scope Changes
-
-Changing scope is a security-sensitive operation.
-
-A scope change may cause a record to influence more systems, users, tools, or future behavior than originally intended.
-
-Implementations SHOULD preserve scope change history, including:
-
-- Prior scope
-- New scope
-- Actor responsible for the change
-- Timestamp
-- Reason
-
-A record’s scope MUST NOT be broadened without authorization from the relevant Authority.
-
-## Authority Conflicts
-
-Records from different Authorities may conflict.
-
-When records conflict, Consumers SHOULD prefer records from the Authority responsible for the requested scope.
-
-If no clear Authority applies, Consumers SHOULD reduce confidence, request review, or avoid using the conflicting records for behavioral guidance.
-
-A record from one Authority MUST NOT override a record from another Authority unless policy explicitly permits it.
-
-## Nested Scopes
-
-Implementations MAY support nested scopes.
-
-Examples:
-
-- Organization → project → repository
-- User → workflow → task
-- Domain → service → tool
-- Node fabric → node → service
-
-Nested scopes MUST NOT imply automatic inheritance unless the implementation defines inheritance rules.
-
-If inheritance is supported, implementations SHOULD document:
-
-- Which scopes inherit from parent scopes
-- Which record types may inherit
-- Which lifecycle states may inherit
-- Which Authorities may override inherited records
-- How conflicts are resolved
+If inheritance is supported, implementations SHOULD document parent/child
+behavior, record kinds that inherit, and conflict resolution.
 
 ## Time-Bound Scope
 
-Some records may only apply during a defined time window.
+Records MAY include time bounds through structured scope fields or `expires_at`.
 
-A time-bound record SHOULD declare when it becomes valid and when it expires.
-
-Expired records SHOULD NOT guide future behavior unless explicitly requested for audit or historical purposes.
-
-Time-bound scope is especially important for temporary decisions, incident response procedures, credentials, migration windows, experiments, and environment-specific work.
+Expired records SHOULD NOT guide future behavior unless explicitly requested for
+audit or historical context.
 
 ## Requirements
 
-ACFS-compatible implementations that support scope and authority:
+ACFS-compatible implementations:
 
-- MUST require scope on each Capability Record
-- MUST require authority on each Capability Record
-- MUST NOT apply records outside their declared scope without authorization
-- SHOULD preserve scope and authority change history
-- SHOULD distinguish Contributors from Reviewers and Authorities
-- SHOULD document inheritance behavior when nested scopes are supported
-- MUST NOT allow scope or authority rules to bypass lifecycle or revocation rules
+- MUST require scope on each record.
+- MUST NOT apply records outside declared scope without authorization.
+- SHOULD preserve scope changes.
+- SHOULD require authority for high-risk promotion and governance profiles.
+- MUST NOT allow scope or authority rules to bypass status or revocation.

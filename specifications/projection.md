@@ -12,9 +12,9 @@ other surfaces.
 
 ## Purpose
 
-Projection allows ACFS-compatible systems to expose durable records without
-letting those surfaces bypass lifecycle, scope, authority, risk, provenance, or
-revocation rules.
+Projection lets ACFS-compatible systems expose durable records without letting
+those surfaces bypass status, scope, authority, risk, provenance, or revocation
+rules.
 
 Projection answers:
 
@@ -26,44 +26,63 @@ Projection answers:
 
 ## Source of Truth
 
-A projection MUST NOT be treated as the canonical record unless the projection is
-itself a Capability Record.
+A projection MUST NOT be treated as the canonical record unless the projection
+is itself an ACFS record.
 
-Projected artifacts SHOULD preserve traceability to their source Capability
-Records.
+Projected artifacts SHOULD preserve traceability to their source records.
 
 Traceability SHOULD include:
 
-- Source record identifiers
-- Lifecycle state
-- Scope
-- Authority
-- Risk
-- Provenance or provenance reference
-- Projection timestamp or revision when available
+- Source record identifiers.
+- Record status.
+- Kind.
+- Scope.
+- Authority when available.
+- Risk when available.
+- Provenance or provenance reference.
+- Projection timestamp or revision when available.
 
 ## Behavioral Projection
 
 A behavioral projection is intended to guide future agent or system behavior.
 
-Behavioral projections SHOULD include only Active records that match the
+Behavioral projections SHOULD include only active records that match the
 Consumer's authorized scope, authority, permissions, and retrieval request.
 
 Revoked records MUST NOT be projected as behavioral guidance.
 
-Submitted, Rejected, Deprecated, and Superseded records SHOULD NOT be projected
-as behavioral guidance unless an implementation defines a specific safe use, such
-as explanatory context attached to an Active replacement.
+Draft and superseded records SHOULD NOT be projected as behavioral guidance
+unless an implementation defines a specific safe use, such as explanatory context
+attached to an active replacement.
+
+Draft capability records MUST NOT be projected as reusable executable behavior
+unless the Consumer explicitly requested draft inspection and the projection is
+clearly marked non-active.
 
 ## Audit Projection
 
 An audit projection is intended for inspection, review, debugging, compliance,
 or historical understanding.
 
-Audit projections MAY include Submitted, Rejected, Deprecated, Superseded, or
-Revoked records when explicitly requested by an authorized Consumer.
+Audit projections MAY include draft, superseded, or revoked records when
+explicitly requested by an authorized Consumer.
 
-Audit projections MUST NOT cause Revoked records to guide future behavior.
+Audit projections MUST NOT cause revoked records to guide future behavior.
+
+## State Capsules
+
+A state capsule is a compact behavioral projection for a task, workspace, or
+session.
+
+A state capsule SHOULD:
+
+- Include active scoped records most relevant to the current task.
+- Prefer summaries and identifiers over full record bodies when space is tight.
+- Preserve source record identifiers for follow-up lookup.
+- Exclude revoked records.
+- Exclude draft capabilities from behavioral guidance.
+
+State capsules are projections, not source records.
 
 ## Projection Policy
 
@@ -71,15 +90,15 @@ Implementations SHOULD define projection policy for each surface.
 
 Projection policy SHOULD define:
 
-- Eligible record types
-- Required lifecycle states
-- Required scopes and authority rules
-- Risk limits
-- Whether relations and dependencies are included
-- Whether records may be composed into aggregate artifacts
-- Whether non-Active records may appear for explanation or audit
-- Required traceability metadata
-- Cache invalidation or refresh behavior
+- Eligible record kinds.
+- Required statuses.
+- Required scopes and authority rules.
+- Risk limits.
+- Whether relations and dependencies are included.
+- Whether records may be composed into aggregate artifacts.
+- Whether non-active records may appear for explanation or audit.
+- Required traceability metadata.
+- Cache invalidation or refresh behavior.
 
 Projection policy MUST NOT broaden scope, change authority, ignore risk, or
 override revocation unless an authorized review or policy process first changes
@@ -87,18 +106,19 @@ the underlying ACFS records.
 
 ## Composition
 
-A projected artifact MAY compose multiple Capability Records.
+A projected artifact MAY compose multiple ACFS records.
 
 For example:
 
-- A procedure may be projected with supporting evidence.
-- A skill may be projected with dependencies and active policy constraints.
-- A memory view may combine observations and decisions within one scope.
+- A handoff may combine decisions, issues, and recent evidence.
+- A state capsule may combine workspace standards and current blockers.
+- A promoted capability may be projected with its evidence and active policy
+  constraints.
 
 Composed projections SHOULD preserve source record identifiers for each included
 record.
 
-If any required source record is Revoked, unavailable, unsupported, or outside
+If any required source record is revoked, unavailable, unsupported, or outside
 the Consumer's authorized scope, the composed projection SHOULD NOT be used for
 behavioral guidance.
 
@@ -106,11 +126,11 @@ behavioral guidance.
 
 Implementations MAY cache or index projections.
 
-Cached projections MUST NOT outlive ACFS lifecycle, scope, authority, risk, or
+Cached projections MUST NOT outlive ACFS status, scope, authority, risk, or
 revocation rules.
 
-When a source record is Revoked, Superseded, Deprecated, or otherwise removed
-from behavioral eligibility, implementations SHOULD invalidate or refresh any
+When a source record is revoked, superseded, or otherwise removed from
+behavioral eligibility, implementations SHOULD invalidate or refresh any
 behavioral projection that includes it.
 
 ## Projection Metadata
@@ -124,7 +144,7 @@ Recommended metadata:
   "projection": {
     "mode": "behavioral",
     "surface": "mcp",
-    "projected_at": "2026-07-09T00:00:00Z",
+    "projected_at": "2026-08-15T00:00:00Z",
     "source_records": ["acfs:record:example"],
     "scope": "repository:github.com/example/project",
     "authority": "organization:example"
@@ -146,7 +166,7 @@ how eligible records are exposed.
 
 MCP is one possible projection surface.
 
-An ACFS implementation MAY project Active records into MCP resources or tools.
+An ACFS implementation MAY project active records into MCP resources or tools.
 MCP resource or tool availability MUST NOT override ACFS projection rules.
 
 An MCP resource SHOULD be traceable to the ACFS records that produced it.
@@ -155,10 +175,12 @@ An MCP resource SHOULD be traceable to the ACFS records that produced it.
 
 ACFS-compatible implementations that support projection:
 
-- MUST treat ACFS records as the source of truth
-- MUST NOT project Revoked records as behavioral guidance
-- MUST preserve scope, authority, lifecycle, risk, and revocation rules during projection
-- SHOULD preserve traceability from projections to source records
-- SHOULD distinguish behavioral projection from audit projection
-- SHOULD define projection policy for each exposed surface
-- SHOULD invalidate or refresh behavioral projections when source records lose behavioral eligibility
+- MUST treat ACFS records as the source of truth.
+- MUST NOT project revoked records as behavioral guidance.
+- MUST preserve scope, authority, status, risk, and revocation rules during
+  projection.
+- SHOULD preserve traceability from projections to source records.
+- SHOULD distinguish behavioral projection from audit projection.
+- SHOULD define projection policy for each exposed surface.
+- SHOULD invalidate or refresh behavioral projections when source records lose
+  behavioral eligibility.

@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent-capability-formation-standard.org/schemas/acfs-record.schema.json",
+  "title": "ACFS Record",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["id", "kind", "status", "scope", "title", "body", "provenance"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "kind": {
+      "type": "string",
+      "enum": ["memory", "decision", "standard", "capability", "evidence", "handoff", "issue"]
+    },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "active", "superseded", "revoked"]
+    },
+    "scope": {
+      "oneOf": [
+        {"type": "string", "minLength": 1},
+        {"$ref": "#/$defs/scope"}
+      ]
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "summary": {
+      "type": "string"
+    },
+    "body": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1}
+    },
+    "relations": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/relation"}
+    },
+    "authority": {
+      "oneOf": [
+        {"type": "string", "minLength": 1},
+        {"$ref": "#/$defs/authority"}
+      ]
+    },
+    "risk": {
+      "type": "string",
+      "enum": ["low", "medium", "high"]
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "provenance": {
+      "$ref": "#/$defs/provenance"
+    }
+  },
+  "$defs": {
+    "scope": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["type", "id"],
+      "properties": {
+        "type": {"type": "string", "minLength": 1},
+        "id": {"type": "string", "minLength": 1},
+        "path": {"type": "string"},
+        "valid_from": {"type": "string", "format": "date-time"},
+        "valid_until": {"type": "string", "format": "date-time"}
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["type", "id"],
+      "properties": {
+        "type": {"type": "string", "minLength": 1},
+        "id": {"type": "string", "minLength": 1}
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["actor", "created_at", "source"],
+      "properties": {
+        "actor": {"type": "string", "minLength": 1},
+        "created_at": {"type": "string", "format": "date-time"},
+        "source": {"type": "string", "minLength": 1}
+      }
+    },
+    "relation": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["type", "target"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["supersedes", "corrects", "contradicts", "depends_on", "derived_from", "evidence_for", "evidence_against"]
+        },
+        "target": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "id": "acfs:record:example:capability:release-checklist",
+  "kind": "capability",
+  "status": "draft",
+  "scope": "workspace:example",
+  "title": "Release checklist",
+  "body": "Check that required tests, documentation updates, and package artifacts are present before publishing a release.",
+  "metadata": {
+    "artifact_type": "script",
+    "artifact_ref": "scripts/release_checklist.sh",
+    "runtime_constraints": "approval-required"
+  },
+  "provenance": {
+    "actor": "codex",
+    "created_at": "2026-08-15T00:00:00Z",
+    "source": "repeated release validation workflow"
+  }
+}

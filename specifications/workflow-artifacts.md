@@ -1,36 +1,37 @@
 # Workflow Artifacts
 
 Workflow artifacts define an optional ACFS extension for representing
-addressable, executable procedure bodies without making the projection or
-runtime surface the source of truth.
+addressable procedure bodies without making the runtime surface the source of
+truth.
 
 This extension is named `acfs.workflow.v1`.
 
 ## Purpose
 
-ACFS already defines `procedure` Capability Records. A workflow is a procedure
-whose steps reference other addressable actions, procedures, skills, tools, or
-runtime operations.
+ACFS vNext does not make workflows part of the base record primitive. A workflow
+is an optional artifact associated with a `kind=capability` record when an
+implementation needs structured reusable execution.
 
-Small workflows MAY be represented directly in a Capability Record's metadata.
+Small workflows MAY be represented directly in a capability record's metadata.
 Larger workflows SHOULD be stored as workflow artifacts and referenced by an
-ACFS Capability Record.
+ACFS record.
 
-The Capability Record remains the governed source of truth for lifecycle, scope,
+The ACFS record remains the governed source of truth for status, scope,
 authority, risk, provenance, retrieval, and projection eligibility. The workflow
 artifact contains the structured workflow body used by a compatible runtime.
 
 ## Workflow Record
 
-A workflow Capability Record MUST use `type=procedure`.
-
-A workflow record that requires this extension SHOULD declare it in metadata:
+A workflow record SHOULD use:
 
 ```json
 {
+  "kind": "capability",
+  "status": "draft",
   "metadata": {
-    "acfs_version": "0.1",
+    "acfs_version": "vNext",
     "extensions": ["acfs.workflow.v1"],
+    "artifact_type": "workflow",
     "workflow_schema": "acfs.workflow.v1",
     "workflow_id": "example.workflow",
     "workflow_ref": "flowos://workspace/workflow/example.workflow"
@@ -38,9 +39,13 @@ A workflow record that requires this extension SHOULD declare it in metadata:
 }
 ```
 
+Workflow capabilities that cause tool use, production changes, financial
+activity, security changes, or durable policy changes SHOULD remain draft until
+explicitly promoted.
+
 Implementations MAY use implementation-native fields such as `backend` metadata
-when documented. Implementation-specific metadata MUST NOT bypass ACFS
-lifecycle, scope, authority, risk, retrieval, or revocation rules.
+when documented. Implementation-specific metadata MUST NOT bypass ACFS status,
+scope, authority, risk, retrieval, or revocation rules.
 
 ## Workflow Artifact
 
@@ -69,8 +74,8 @@ metadata: {}
 Each step MUST include:
 
 - `id`: stable step identifier within the workflow.
-- `action_id`: addressable action, procedure, skill, or operation identifier
-  understood by the runtime.
+- `action_id`: addressable action, capability, skill, tool, or operation
+  identifier understood by the runtime.
 
 Each step MAY include:
 
@@ -99,7 +104,7 @@ use the workflow artifact for behavioral guidance.
 
 ## Relations
 
-The workflow Capability Record SHOULD use relations to preserve graph structure:
+The workflow ACFS record SHOULD use relations to preserve graph structure:
 
 - `depends_on` SHOULD include required child action records, policy records, and
   the workflow artifact record when one exists.
@@ -109,7 +114,7 @@ The workflow Capability Record SHOULD use relations to preserve graph structure:
 
 Workflow run evidence SHOULD use:
 
-- `evidence_for` to point at the workflow Capability Record.
+- `evidence_for` to point at the workflow record.
 - `derived_from` to point at child step evidence records.
 
 ## Projection
@@ -117,18 +122,18 @@ Workflow run evidence SHOULD use:
 Workflow artifacts MAY be projected through MCP, HTTP APIs, files, local user
 interfaces, or other surfaces.
 
-Projected workflow artifacts MUST remain traceable to their governing
-Capability Record when used for behavioral guidance.
+Projected workflow artifacts MUST remain traceable to their governing ACFS
+record when used for behavioral guidance.
 
-Revoked workflow records MUST NOT be projected as behavioral guidance. Deprecated
-or superseded workflow records SHOULD NOT be used for new execution unless
+Revoked workflow records MUST NOT be projected as behavioral guidance.
+Superseded workflow records SHOULD NOT be used for new execution unless
 explicitly requested for audit or migration.
 
 ## Requirements
 
 ACFS-compatible implementations that support `acfs.workflow.v1`:
 
-- MUST treat the workflow Capability Record as the governed source of truth.
+- MUST treat the workflow ACFS record as the governed source of truth.
 - MUST preserve required ACFS record fields.
 - MUST preserve workflow artifact identifiers and step identifiers.
 - MUST reject or quarantine workflow artifacts with missing required step fields.
