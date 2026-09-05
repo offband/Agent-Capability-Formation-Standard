@@ -2,6 +2,11 @@
 
 ACFS v0.2.1 defines a durable record primitive for agent workspaces.
 
+## Version
+
+The current release is **v0.2.1**. ACFS Core in this release covers durable
+records, scoped recall, state capsules, and capability lifecycle.
+
 ACFS Core is deliberately small: durable records, scoped recall, state
 capsules, and capability lifecycle. An agent should be able to persist and
 recall the durable facts that make a workspace reliable across sessions,
@@ -149,9 +154,9 @@ belongs to an implementation, such as FlowOS, not to ACFS itself.
 - **ACFS-MCP**: optional transport binding for MCP tools/resources.
 - **ACFS-Portable**: optional profile for import/export.
 
-Legacy ACFS 0.1 capability records remain compatible through the governed
-capability profile. Implementations may accept legacy `type/lifecycle` records
-and map them to `kind/status` records.
+Legacy ACFS 0.1 capability records are deprecated for new records, but remain
+compatible through the governed capability profile. Implementations may accept
+legacy `type/lifecycle` records and map them to `kind/status` records.
 
 Runtime execution, tool invocation, hosting, auth, package managers, workflow
 engines, and agent orchestration are implementation concerns. They may be
@@ -178,4 +183,10 @@ requirements.
 - `security/trust-and-safety.md`: durable record safety guidance
 - `schemas/acfs-record.schema.json`: ACFS v0.2.1 record schema
 - `schemas/capability-record.schema.json`: legacy governed record schema
-- `examples/`: valid and invalid examples
+- `examples/valid/`: ACFS v0.2.1 Core examples
+- `examples/invalid/`: ACFS v0.2.1 Core negative examples
+- `examples/legacy/`: deprecated ACFS 0.1 compatibility examples
+
+## License
+
+See [LICENSE](LICENSE).
