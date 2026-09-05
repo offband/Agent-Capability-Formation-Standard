@@ -4,10 +4,13 @@
   "lifecycle": "active",
   "scope": "workspace:example",
   "title": "Legacy lifecycle without status",
-  "body": "This record is invalid for ACFS-Records because vNext requires status.",
+  "body": "This record is invalid for ACFS-Records because v0.2.1 requires status.",
   "provenance": {
     "actor": "codex",
     "created_at": "2026-08-15T00:00:00Z",
     "source": "example"
+  },
+  "metadata": {
+    "acfs_version": "v0.2.1"
   }
 }

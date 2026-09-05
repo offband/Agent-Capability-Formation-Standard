@@ -1,15 +1,18 @@
 # Agent Capability Formation Standard
 
-ACFS defines a durable record primitive for agent workspaces.
+ACFS v0.2.1 defines a durable record primitive for agent workspaces.
 
-The goal of ACFS vNext is simple: an agent should be able to persist and recall
-the durable facts that make a workspace reliable across sessions, reboots, model
-changes, and tool boundaries. Those records may capture memory, decisions,
-standards, evidence, issues, handoffs, and draft capabilities.
+ACFS Core is deliberately small: durable records, scoped recall, state
+capsules, and capability lifecycle. An agent should be able to persist and
+recall the durable facts that make a workspace reliable across sessions,
+reboots, model changes, and tool boundaries. Those records may capture memory,
+decisions, standards, evidence, issues, handoffs, and draft capabilities.
 
 ACFS is not a chat history format, storage engine, app framework, or
-inter-agent message bus. It defines how agent-contributed records are written,
-addressed, scoped, recalled, superseded, revoked, and promoted into reusable
+inter-agent message bus. It does not define runtime execution, tool invocation,
+hosting, authentication, package managers, billing, or agent orchestration. It
+defines how agent-contributed records are written, addressed, scoped, recalled,
+summarized into state capsules, superseded, revoked, and promoted into reusable
 capability.
 
 ACFS is the portable standard. Implementations such as FlowOS may provide the
@@ -42,7 +45,10 @@ durable recall and safe behavioral use:
   "status": "active",
   "scope": "workspace:example",
   "title": "Use ACFS Records as the base primitive",
-  "body": "ACFS vNext centers on durable records and recall. Capability governance is an optional profile.",
+  "body": "ACFS v0.2.1 centers on durable records, scoped recall, state capsules, and capability lifecycle.",
+  "metadata": {
+    "acfs_version": "v0.2.1"
+  },
   "provenance": {
     "actor": "agent",
     "created_at": "2026-08-15T00:00:00Z",
@@ -134,40 +140,42 @@ belongs to an implementation, such as FlowOS, not to ACFS itself.
 ## Profiles
 
 - **ACFS-Records**: minimum durable record and recall profile.
-- **ACFS-Capabilities**: optional profile for draft/promoted capabilities and
-  artifact references.
+- **ACFS-Capabilities**: draft/promoted capabilities and lifecycle.
 - **ACFS-Governance**: optional profile for review, authority, risk, lifecycle
   events, status history, and promotion policy.
 - **ACFS-Relations**: optional profile for richer record graphs.
 - **ACFS-Retrieval**: optional profile for recall, search, state capsules, and
   audit retrieval.
-- **ACFS-MCP**: optional profile for MCP tools/resources.
+- **ACFS-MCP**: optional transport binding for MCP tools/resources.
 - **ACFS-Portable**: optional profile for import/export.
 
 Legacy ACFS 0.1 capability records remain compatible through the governed
 capability profile. Implementations may accept legacy `type/lifecycle` records
 and map them to `kind/status` records.
 
+Runtime execution, tool invocation, hosting, auth, package managers, workflow
+engines, and agent orchestration are implementation concerns. They may be
+documented as non-core notes or extensions, but they are not ACFS Core
+requirements.
+
 ## Repository Map
 
-- `specifications/records.md`: ACFS vNext base record shape and field rules
+- `specifications/records.md`: ACFS v0.2.1 base record shape and field rules
 - `specifications/capability-records.md`: legacy governed capability profile
 - `specifications/lifecycle.md`: status and promotion expectations
 - `specifications/formation.md`: capability drafting and promotion
 - `specifications/relations.md`: sparse relation model
 - `specifications/retrieval.md`: recall, search, state capsules, and audit
 - `specifications/mcp-binding.md`: optional MCP transport mapping
-- `specifications/agent-packaging.md`: skill/plugin packaging guidance
+- `specifications/agent-packaging.md`: non-core skill/plugin packaging notes
 - `specifications/projection.md`: behavioral and audit projections
 - `specifications/scope-and-authority.md`: scope and optional authority
-- `specifications/implementation-boundary.md`: standard/runtime boundary and
-  mappings for artifacts, actions, runs, triggers, and packages
+- `specifications/implementation-boundary.md`: standard/runtime boundary
 - `specifications/conformance.md`: compatibility profiles
 - `specifications/versioning-and-extensions.md`: extension/version rules
-- `specifications/workflow-artifacts.md`: optional executable workflow artifacts
-- `specifications/fabric-coordination.md`: optional coordination fabric
-  extension
+- `specifications/workflow-artifacts.md`: non-core workflow artifact notes
+- `specifications/fabric-coordination.md`: non-core coordination fabric notes
 - `security/trust-and-safety.md`: durable record safety guidance
-- `schemas/acfs-record.schema.json`: ACFS vNext record schema
+- `schemas/acfs-record.schema.json`: ACFS v0.2.1 record schema
 - `schemas/capability-record.schema.json`: legacy governed record schema
 - `examples/`: valid and invalid examples

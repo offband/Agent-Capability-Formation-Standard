@@ -1,11 +1,11 @@
 # Conformance
 
-Conformance defines how implementations describe which ACFS vNext requirements
+Conformance defines how implementations describe which ACFS v0.2.1 requirements
 they support.
 
-ACFS is intended to support local workspace stores, MCP-backed services, hosted
-platforms, and portable archives. Implementations SHOULD publish a conformance
-declaration that lists supported profiles and extensions.
+ACFS Core covers durable records, scoped recall, state capsules, and capability
+lifecycle. Implementations SHOULD publish a conformance declaration that lists
+supported profiles and extensions.
 
 ## ACFS-Records
 
@@ -17,9 +17,10 @@ An ACFS-Records implementation MUST:
 - Validate record structure.
 - Preserve status and scope.
 - Preserve provenance.
+- Preserve `metadata.acfs_version: "v0.2.1"` on v0.2.1 records.
 - Prevent revoked records from guiding future behavior.
 - Distinguish behavioral recall from audit retrieval.
-- Support import/export of records using the vNext record shape.
+- Support import/export of records using the v0.2.1 record shape.
 
 ## ACFS-Capabilities
 
@@ -85,49 +86,13 @@ revocation rules.
 
 ACFS-MCP implementations SHOULD follow `specifications/mcp-binding.md`.
 
-## ACFS-Fabric
-
-ACFS-Fabric covers optional live coordination state for agent identity,
-sessions, task leases, coordination events, receipts, and context-pack
-projections.
-
-ACFS-Fabric implementations MUST support ACFS-Records and MUST keep ACFS
-Records as the authority layer. Fabric entities coordinate work; they do not
-become behavioral guidance unless they are formed into ACFS Records or governed
-projections under ACFS rules.
-
-ACFS-Fabric implementations SHOULD follow
-`specifications/fabric-coordination.md`.
-
-## ACFS-Packaging
-
-ACFS-Packaging covers optional distribution as skills, plugins, implementation
-packages, or combined installable bundles.
-
-An ACFS-Packaging implementation MUST support ACFS-Records and MUST:
-
-- Document whether the package is skills-only, implementation-backed, or
-  combined.
-- Distinguish workflow instructions from live durable storage.
-- Prevent packaging metadata from bypassing ACFS status, scope, promotion,
-  authorization, or revocation rules.
-
-ACFS-Packaging implementations SHOULD:
-
-- Keep main skill instructions focused.
-- Put detailed schemas, examples, and implementation notes in references.
-- Include positive and negative activation tests.
-- Expose skill, plugin, or packaging version in conformance metadata when
-  available.
-- Follow `specifications/agent-packaging.md`.
-
 ## ACFS-Portable
 
 ACFS-Portable covers exchange between implementations.
 
 An ACFS-Portable implementation MUST support ACFS-Records and SHOULD:
 
-- Export records using the vNext record shape.
+- Export records using the v0.2.1 record shape.
 - Preserve required fields and known optional fields.
 - Document extension fields.
 - Reject, quarantine, or mark audit-only records that require unsupported
@@ -139,6 +104,15 @@ Implementations MAY claim compatibility with the legacy Capability Record
 profile described in `specifications/capability-records.md`.
 
 Legacy compatibility is not required for ACFS-Records.
+
+## Non-Core Notes
+
+Runtime execution, tool invocation, hosting, authentication, package managers,
+workflow engines, billing, and agent orchestration are outside ACFS Core.
+Documents such as `specifications/agent-packaging.md`,
+`specifications/workflow-artifacts.md`, and
+`specifications/fabric-coordination.md` are non-core implementation notes unless
+a future ACFS release promotes a focused extension.
 
 ## Requirements
 

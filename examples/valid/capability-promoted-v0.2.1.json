@@ -16,6 +16,7 @@
     }
   ],
   "metadata": {
+    "acfs_version": "v0.2.1",
     "artifact_type": "script",
     "artifact_ref": "scripts/release_checklist.sh",
     "runtime_constraints": "sandboxed"

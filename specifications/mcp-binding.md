@@ -1,7 +1,8 @@
 # MCP Binding
 
 MCP is an optional transport binding for ACFS-compatible implementations. ACFS
-does not require MCP and does not define a standalone ACFS server product.
+does not require MCP, does not define tool invocation semantics, and does not
+define a standalone ACFS server product.
 
 An implementation, such as FlowOS, may expose ACFS tools and resources through
 an MCP server. That implementation remains responsible for enforcing ACFS
@@ -9,8 +10,9 @@ status, scope, promotion, retrieval, and revocation rules.
 
 The same MCP server MAY expose runtime-specific tools for actions, triggers,
 runs, artifacts, packages, or agent coordination. Those tools are outside the
-ACFS-MCP profile unless they preserve ACFS boundary rules and document how their
-behavior maps to ACFS records, relations, metadata, or extensions.
+ACFS-MCP profile. They remain implementation behavior even when they preserve
+ACFS boundary rules and document how their behavior maps to ACFS records,
+relations, metadata, or extensions.
 
 ## Recommended Tools
 

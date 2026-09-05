@@ -1,6 +1,6 @@
 # ACFS Records
 
-An ACFS Record is the base primitive of ACFS vNext.
+An ACFS Record is the base primitive of ACFS v0.2.1.
 
 It is a durable, addressable, scoped object that preserves agent-contributed
 workspace context so future agents can recall and reuse it without reading long
@@ -18,6 +18,9 @@ An ACFS-Records implementation MUST preserve these fields:
   "scope": "workspace:example",
   "title": "Short durable title",
   "body": "Primary durable content.",
+  "metadata": {
+    "acfs_version": "v0.2.1"
+  },
   "provenance": {
     "actor": "agent-or-user",
     "created_at": "2026-08-15T00:00:00Z",
@@ -90,8 +93,10 @@ required only by governance profiles.
 The `risk` field classifies behavioral impact. It is optional in ACFS-Records
 and required only by governance profiles.
 
-The `metadata` field contains implementation-specific data. Metadata MUST NOT
-bypass status, scope, revocation, or promotion rules.
+The `metadata` field contains ACFS version metadata and implementation-specific
+data. `metadata.acfs_version` MUST be `v0.2.1` for records claiming this
+version. Metadata MUST NOT bypass status, scope, revocation, or promotion
+rules.
 
 ## Status Rules
 
@@ -123,6 +128,7 @@ ACFS-Records implementations:
 - MUST preserve status.
 - MUST preserve scope.
 - MUST preserve provenance.
+- MUST preserve `metadata.acfs_version`.
 - MUST prevent revoked records from guiding future behavior.
 - SHOULD support import and export using the standard shape.
 - SHOULD support supersession without silent history loss.

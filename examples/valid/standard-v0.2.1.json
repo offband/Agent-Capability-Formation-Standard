@@ -5,10 +5,17 @@
   "scope": "workspace:example",
   "title": "Executable capabilities require promotion",
   "body": "Agents may draft reusable capabilities, but scripts, workflows, and behavior-shaping deterministic prompts must not become default guidance until explicitly promoted.",
-  "tags": ["capabilities", "safety", "sandbox"],
+  "tags": [
+    "capabilities",
+    "safety",
+    "sandbox"
+  ],
   "provenance": {
     "actor": "operator",
     "created_at": "2026-08-15T00:00:00Z",
-    "source": "ACFS vNext design decision"
+    "source": "ACFS v0.2.1 design decision"
+  },
+  "metadata": {
+    "acfs_version": "v0.2.1"
   }
 }

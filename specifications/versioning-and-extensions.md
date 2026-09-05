@@ -12,7 +12,7 @@ Records MAY include a standard version in metadata:
 ```json
 {
   "metadata": {
-    "acfs_version": "vNext"
+    "acfs_version": "v0.2.1"
   }
 }
 ```
@@ -33,7 +33,7 @@ implementation understands their meaning.
 
 ## Compatibility Profiles
 
-ACFS vNext uses named profiles so simple implementations can stay small.
+ACFS v0.2.1 uses named profiles so simple implementations can stay small.
 
 Base implementations SHOULD claim `ACFS-Records`.
 
@@ -47,6 +47,11 @@ Implementations MAY additionally claim:
 - `ACFS-Legacy-Capability-Records`
 
 See `specifications/conformance.md` for profile requirements.
+
+Runtime execution, tool invocation, hosting, authentication, package managers,
+workflow engines, billing, and agent orchestration are not ACFS Core profiles in
+v0.2.1. They require implementation documentation or a future non-core
+extension.
 
 ## Extensions
 
@@ -99,7 +104,7 @@ clearly named conformance profile.
 
 Implementations SHOULD provide migration guidance when record shapes change.
 
-Legacy ACFS 0.1 `type/lifecycle` records MAY be imported into vNext by mapping
+Legacy ACFS 0.1 `type/lifecycle` records MAY be imported into v0.2.1 by mapping
 them to `kind/status` records. Implementations SHOULD preserve the original
 fields in metadata when audit fidelity matters.
 

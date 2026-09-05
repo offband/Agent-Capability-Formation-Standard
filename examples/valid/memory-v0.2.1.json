@@ -6,10 +6,17 @@
   "title": "Release builds run from the repository root",
   "summary": "Package and validation commands for this workspace should run from the repository root.",
   "body": "Release validation expects relative paths for schemas, examples, and generated artifacts. Run package and validation commands from the repository root unless a tool documents another working directory.",
-  "tags": ["release", "validation", "workspace"],
+  "tags": [
+    "release",
+    "validation",
+    "workspace"
+  ],
   "provenance": {
     "actor": "codex",
     "created_at": "2026-08-15T00:00:00Z",
     "source": "workspace release notes"
+  },
+  "metadata": {
+    "acfs_version": "v0.2.1"
   }
 }

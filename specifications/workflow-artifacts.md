@@ -8,7 +8,7 @@ This extension is named `acfs.workflow.v1`.
 
 ## Purpose
 
-ACFS vNext does not make workflows part of the base record primitive. A workflow
+ACFS v0.2.1 does not make workflows part of the base record primitive. A workflow
 is an optional artifact associated with a `kind=capability` record when an
 implementation needs structured reusable execution.
 
@@ -29,7 +29,7 @@ A workflow record SHOULD use:
   "kind": "capability",
   "status": "draft",
   "metadata": {
-    "acfs_version": "vNext",
+    "acfs_version": "v0.2.1",
     "extensions": ["acfs.workflow.v1"],
     "artifact_type": "workflow",
     "workflow_schema": "acfs.workflow.v1",

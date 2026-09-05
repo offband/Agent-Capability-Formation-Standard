@@ -3,7 +3,7 @@
 Relations connect ACFS Records without making graph management mandatory for the
 base primitive.
 
-ACFS vNext uses sparse relation objects:
+ACFS v0.2.1 uses sparse relation objects:
 
 ```json
 {

@@ -3,7 +3,7 @@
 Capability formation is the process by which durable records become reusable
 future behavior.
 
-ACFS vNext treats formation as an optional layer over ACFS Records. The base
+ACFS v0.2.1 treats formation as an optional layer over ACFS Records. The base
 primitive captures and recalls records. The capability layer promotes repeated,
 observed, or reviewed behavior into active capability.
 

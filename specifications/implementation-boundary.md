@@ -11,15 +11,14 @@ promotion, supersession, and revocation.
 
 ## Core Standard Concepts
 
-ACFS centers on four concepts:
+ACFS Core centers on four concepts:
 
 - **Record**: a durable scoped object that can be recalled, audited, revised,
   superseded, or revoked.
 - **Capability**: a record that describes reusable behavior, procedure, skill,
-  script, prompt, workflow, policy, or runtime reference.
-- **Relation**: a typed link between records or between a record and an
-  implementation object.
-- **Recall**: retrieval intended to guide future behavior, constrained by
+  prompt, or runtime reference without itself granting execution permission.
+- **Recall and state capsules**: retrieval and compact briefings intended to
+  guide future behavior, constrained by
   status, scope, provenance, authority, risk, and revocation.
 
 Implementations SHOULD keep these concepts visible at the boundary where data is
@@ -37,6 +36,9 @@ Runtimes MAY define richer implementation concepts such as:
 - packages
 - user interface state
 - local storage indexes
+- tool invocation
+- authentication
+- hosting
 - billing or entitlement state
 - agent session state
 
@@ -49,8 +51,8 @@ guidance.
 
 ## Common Mappings
 
-The following mappings are RECOMMENDED for implementations that expose richer
-runtime objects while preserving ACFS portability:
+The following mappings are non-core guidance for implementations that expose
+richer runtime objects while preserving ACFS portability:
 
 | Runtime object | ACFS boundary mapping |
 | --- | --- |
@@ -61,8 +63,8 @@ runtime objects while preserving ACFS portability:
 | Package | An implementation distribution object whose behavioral contents remain governed by ACFS records. |
 
 Small implementation details MAY live in record metadata. Larger executable
-procedure bodies SHOULD use a documented extension, such as
-`acfs.workflow.v1`, while keeping the ACFS record as the governed source of
+procedure bodies belong to implementation-specific systems or documented
+non-core extensions while keeping the ACFS record as the governed source of
 truth.
 
 ## Compatibility Rule

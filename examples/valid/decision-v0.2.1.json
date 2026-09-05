@@ -1,0 +1,22 @@
+{
+  "id": "acfs:record:example:decision:acfs-records-v0.2.1",
+  "kind": "decision",
+  "status": "active",
+  "scope": "workspace:example",
+  "title": "Use ACFS Records as the v0.2.1 base primitive",
+  "body": "ACFS v0.2.1 will optimize for durable scoped records and task recall. Governance, projections, workflow artifacts, and executable capabilities move to optional profiles.",
+  "relations": [
+    {
+      "type": "supersedes",
+      "target": "acfs:record:example:standard:workflow-artifact-syntax-v1"
+    }
+  ],
+  "provenance": {
+    "actor": "operator",
+    "created_at": "2026-08-15T00:00:00Z",
+    "source": "ACFS standards working group"
+  },
+  "metadata": {
+    "acfs_version": "v0.2.1"
+  }
+}

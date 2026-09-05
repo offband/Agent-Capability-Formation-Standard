@@ -1,6 +1,6 @@
 # Status and Lifecycle
 
-ACFS vNext uses a small base status model and reserves heavier lifecycle
+ACFS v0.2.1 uses a small base status model and reserves heavier lifecycle
 governance for optional profiles.
 
 ## Base Status Values
@@ -66,7 +66,7 @@ timestamp, prior status, new status, and reason when available.
 
 ## Legacy Mapping
 
-Legacy lifecycle states map to vNext status values:
+Legacy lifecycle states map to v0.2.1 status values:
 
 - `submitted` and `validated` map to `draft`.
 - `active` maps to `active`.

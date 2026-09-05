@@ -4,7 +4,7 @@ The original ACFS 0.1 Capability Record shape remains a governed compatibility
 profile. It is useful for systems that need explicit authority, risk,
 transition history, relation arrays, and review policy on every record.
 
-ACFS vNext uses `specifications/records.md` as the base primitive. New
+ACFS v0.2.1 uses `specifications/records.md` as the base primitive. New
 implementations SHOULD start with ACFS-Records and add governance only when
 records can shape future behavior, execute code, broaden authority, or affect
 high-risk work.
@@ -42,9 +42,9 @@ The legacy Capability Record shape requires:
 }
 ```
 
-This shape maps to ACFS vNext as follows:
+This shape maps to ACFS v0.2.1 as follows:
 
-| Legacy field | ACFS vNext field |
+| Legacy field | ACFS v0.2.1 field |
 | --- | --- |
 | `type` | `kind` |
 | `lifecycle=submitted|validated` | `status=draft` |
@@ -55,7 +55,7 @@ This shape maps to ACFS vNext as follows:
 | `provenance.submitted_at` | `provenance.created_at` |
 
 Legacy relation arrays SHOULD be converted to sparse relation objects when
-exporting to ACFS vNext.
+exporting to ACFS v0.2.1.
 
 ## When To Use This Profile
 
@@ -78,4 +78,4 @@ Implementations that claim legacy Capability Record compatibility:
 - MUST preserve authority and risk.
 - MUST preserve relation arrays.
 - MUST prevent revoked records from guiding future behavior.
-- SHOULD provide a migration or adapter path to ACFS vNext records.
+- SHOULD provide a migration or adapter path to ACFS v0.2.1 records.

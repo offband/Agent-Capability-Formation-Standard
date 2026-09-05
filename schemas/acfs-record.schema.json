@@ -4,7 +4,7 @@
   "title": "ACFS Record",
   "type": "object",
   "additionalProperties": true,
-  "required": ["id", "kind", "status", "scope", "title", "body", "provenance"],
+  "required": ["id", "kind", "status", "scope", "title", "body", "metadata", "provenance"],
   "properties": {
     "id": {
       "type": "string",
@@ -54,7 +54,13 @@
     },
     "metadata": {
       "type": "object",
-      "additionalProperties": true
+      "additionalProperties": true,
+      "required": ["acfs_version"],
+      "properties": {
+        "acfs_version": {
+          "const": "v0.2.1"
+        }
+      }
     },
     "expires_at": {
       "type": "string",
