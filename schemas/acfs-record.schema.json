@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://agent-capability-formation-standard.org/schemas/acfs-record.schema.json",
   "title": "ACFS Record",
+  "$comment": "Core enums remain closed. Validate declared extension payloads additionally; see specifications/versioning-and-extensions.md. Structural validity is not authorization or ACFS-Governance conformance.",
   "type": "object",
   "additionalProperties": true,
   "required": ["id", "kind", "status", "scope", "title", "body", "metadata", "provenance"],

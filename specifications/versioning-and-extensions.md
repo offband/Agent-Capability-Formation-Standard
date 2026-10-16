@@ -29,8 +29,9 @@ all optional or implementation-specific metadata.
 Unknown metadata fields SHOULD be preserved during import, export, retrieval,
 revision, and status changes unless policy requires removal.
 
-Unknown relation types SHOULD NOT be treated as behavioral guidance unless the
-implementation understands their meaning.
+Unknown values in base `kind`, `status`, or `relations[].type` fail base
+validation. Unknown custom semantics in namespaced extension data follow the
+handling rules below; additional properties do not widen base enums.
 
 ## Compatibility Profiles
 
@@ -66,36 +67,90 @@ only because one implementation uses it internally. First document how the
 concept maps to records, relations, metadata, recall behavior, and safety
 boundaries.
 
-Extensions SHOULD declare:
+Extensions MUST document their identifier and version, payload location and
+meaning, required profiles, validation constraints, and whether safe use requires
+understanding them. Identifiers SHOULD be namespaced and version-specific.
+Definitions MAY be exchanged as documentation or JSON Schema; no registry,
+network lookup, or new schema language is required. A declaration is not proof
+that the extension or its source is trusted.
 
-- Extension name.
-- Version.
-- Required conformance profiles.
-- Added record fields, metadata fields, relation types, or status behavior.
-- Whether the extension is optional or mandatory for records that use it.
+## Extension Representation
 
-Extension fields SHOULD be namespaced to avoid collision.
+Portable v0.2.1 records MUST pass the unchanged base record schema. The seven
+Core kinds, four statuses, and seven base relation types remain closed.
+Custom kinds MUST map to an appropriate Core kind; custom relation types MUST
+live in a namespaced metadata payload. The extension definition MUST specify
+the mapping and custom relation direction. If no safe Core mapping exists,
+the native object is not a portable v0.2.1 record; retain it as an external
+artifact or reject it, rather than widening the Core enums.
 
-Example:
+Records using custom semantics MUST explicitly declare their versioned
+identifiers in `metadata.extensions`, an array of distinct nonempty strings.
+Payloads SHOULD use metadata keys equal to their extension identifiers.
+Required extensions MUST also be listed in `metadata.required_extensions`,
+an array of distinct identifiers drawn from `metadata.extensions`. Both fields
+are conditional metadata conventions, not new required Core fields. Ordinary
+optional implementation metadata need not be declared as an extension.
+
+Example fragment (not a complete record):
 
 ```json
 {
+  "kind": "capability",
   "metadata": {
-    "extensions": ["example.audit-signature.v1"],
-    "example.audit-signature.v1": {
-      "signature": "..."
+    "acfs_version": "v0.2.1",
+    "extensions": ["example.procedure.v1"],
+    "required_extensions": ["example.procedure.v1"],
+    "example.procedure.v1": {
+      "kind": "procedure",
+      "relations": [{"type": "reviewed_by", "target": "user:reviewer"}]
     }
   }
 }
 ```
 
-## Mandatory Extensions
+Here the custom kind refines `capability`; `reviewed_by` is not a new base
+relation and does not itself prove authorized review. See the
+[example extension schema](../examples/extensions/procedure.schema.json).
+An extension schema MUST constrain the extension payload in addition to, not
+instead of, base validation. It MAY use JSON Schema `allOf` with a reference to
+the base schema, or be applied separately after base validation. Validators
+MUST NOT remove enums, discard metadata requirements, or rewrite an input into
+a passing shape. Schema/document resolution MUST use explicitly supported
+local or otherwise trusted definitions; arbitrary record-supplied URIs MUST
+NOT cause automatic code execution or privileged network access.
 
-Records that require an extension for safe interpretation SHOULD declare that
-requirement in metadata.
+## Unsupported and Mandatory Extensions
 
-Consumers that do not support a mandatory extension SHOULD NOT use the record
-for behavioral guidance.
+If safe interpretation depends on custom semantics, the producer MUST declare
+the extension required. Custom kind or relation semantics that affect
+behavioral eligibility, authorization, dependencies, or scope require this
+marking. A producer MUST NOT label a safety-critical requirement optional.
+
+Consumers MUST distinguish these outcomes:
+
+| Condition | Handling |
+| --- | --- |
+| Base schema fails, including custom values in base enums | Reject as a portable v0.2.1 record; MAY retain the original for audit/quarantine. |
+| Supported extension | Validate its payload against the documented constraints as well as the base shape; then apply its semantics and normal lifecycle/policy checks. |
+| Invalid optional payload | MUST NOT infer its custom semantics; MAY ignore only if safe interpretation does not depend on it. |
+| Unknown optional extension | SHOULD preserve its data; MAY ignore its custom semantics only when the remaining record is safely interpretable without them. No automatic authorization follows. |
+| Unknown/unsupported required extension, malformed declaration, or invalid required payload | MUST NOT use as behavioral guidance; reject, quarantine, or retain audit-only with the reason. |
+| A required extension is not in `metadata.extensions` | The declaration is inconsistent; MUST NOT use as behavioral guidance. |
+
+Unknown optional metadata remains preservable; the base schema intentionally
+accepts it. A schema pass does not validate these conditional declarations.
+Consumers MUST NOT silently strip a required marker or payload and then treat
+the remainder as approved guidance. Import/export SHOULD preserve declarations,
+payloads, and evidence locators unless policy requires redaction; a redacted
+requirement remains unsatisfied, not implicitly optional.
+
+Existing documented extension encodings MAY be accepted through an explicit,
+documented adapter that preserves their meaning and safety requirements.
+New portable exports MUST use these declarations. Native custom base enum
+values were never accepted by the v0.2.1 base schema; map them before export,
+retaining their original meaning in the declared payload. This clarification
+does not change the set of records accepted by the base JSON Schema.
 
 ## Schema Evolution
 
@@ -120,7 +175,7 @@ ACFS-compatible implementations:
 - SHOULD document supported ACFS versions, profiles, and extensions.
 - SHOULD document implementation-specific runtime concepts that are not part of
   the ACFS base profile.
-- SHOULD reject, quarantine, or restrict records that require unsupported
-  mandatory extensions.
+- MUST exclude records requiring unsupported extensions from behavioral
+  guidance; rejection, quarantine, or audit-only retention remain choices.
 - MUST NOT allow unknown extensions to bypass status, scope, authority, risk,
   retrieval, or revocation rules.
