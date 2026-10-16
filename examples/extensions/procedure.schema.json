@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/acfs/procedure-v1.schema.json",
+  "title": "Example procedure extension (illustrative, not a Core schema)",
+  "allOf": [
+    {"$ref": "https://agent-capability-formation-standard.org/schemas/acfs-record.schema.json"},
+    {
+      "properties": {
+        "kind": {"const": "capability"},
+        "metadata": {
+          "required": ["extensions", "required_extensions", "example.procedure.v1"],
+          "properties": {
+            "extensions": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true, "contains": {"const": "example.procedure.v1"}},
+            "required_extensions": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true, "contains": {"const": "example.procedure.v1"}},
+            "example.procedure.v1": {
+              "type": "object",
+              "required": ["kind", "relations"],
+              "properties": {
+                "kind": {"const": "procedure"},
+                "relations": {"type": "array", "items": {"type": "object", "required": ["type", "target"], "properties": {"type": {"const": "reviewed_by"}, "target": {"type": "string", "minLength": 1}}}}
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

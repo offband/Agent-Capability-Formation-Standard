@@ -147,7 +147,10 @@ this evidence requirement; the applicable authority can be identified in the
 history instead. Implementations MUST document how authorized consumers can
 locate and interpret this evidence. ACFS defines its meaning here, not new
 required JSON fields, an event schema, an identity provider, an organizational
-hierarchy, an approval mechanism, or a policy language.
+hierarchy, an approval mechanism, or a policy language. For portable governance
+evidence discovery and missing/unsupported evidence handling, see
+[Governance Evidence Interchange](governance-evidence.md). This does not change
+the authorization or policy-bounded offline-use rules.
 
 ## Required Edge Cases
 

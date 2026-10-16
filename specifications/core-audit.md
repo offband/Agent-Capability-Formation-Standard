@@ -19,7 +19,9 @@ fields, kinds, statuses, profiles, or schema requirements.
 
 ## Existing Schema Behavior and Compatibility
 
-Both JSON schemas and all JSON examples are unchanged. The v0.2.1 schema
+At the #4/#5 boundary both schemas and JSON examples were unchanged. Issue #6
+adds validation fixtures and corrects two misleading example edges; the base
+schema acceptance set remains unchanged. The v0.2.1 schema
 requires `id`, `kind`, `status`, `scope`, `title`, `body`, `metadata`, and
 `provenance`. Metadata requires the exact version string; provenance requires
 `actor`, `created_at`, and `source`. Scope accepts a nonempty string or an
@@ -63,8 +65,8 @@ The three required edge cases are documented as semantic outcomes in
 authority, low-risk policy activation, and revocation while a participant holds
 a cached active copy. These are not the full cross-agent fixtures for #7.
 
-The v0.2.1 record shape, four statuses, seven kinds, schemas, and JSON examples
-remain unchanged. Stronger governance evidence can use existing metadata,
+At completion of #5 the v0.2.1 record shape, four statuses, seven kinds, schemas,
+and JSON examples were unchanged. Stronger governance evidence can use existing metadata,
 provenance extensions, related records, or inspectable implementation history;
 there is no new mandatory event schema. Existing Core records remain valid.
 Implementations claiming ACFS-Governance may need to retain more evidence than
@@ -85,45 +87,44 @@ does not change the lifecycle states or permit knowingly using withdrawn
 guidance. High-risk policy may demand continuous connectivity or immediate
 revalidation; no new service, profile, or synchronization protocol is introduced.
 
-## Deferred Schema and Conformance Questions — Issue #6
+## Schema and Evidence Interoperability — Issue #6
 
-- Records/relations prose allows documented additional kinds and relation types,
-  but the current schema rejects them. Decide extension validation and
-  advertisement rules without silently widening the base enums. Additional
-  properties do not make enum extensions schema-valid.
-- Decide how governance evidence and mandatory-extension declarations are
-  validated. Issue #5 defines the evidence meanings, not a canonical encoding.
-  Current metadata is open-ended; schema validity cannot certify authorization
-  or safe behavioral use. Decide interoperable discovery/reference handling,
-  timestamp representation, and policy identification across implementations,
-  including how to retain the policy basis in effect at decision time.
-- Define conformance checks for missing or inaccessible governance evidence,
-  denied activation, initial active creation with no prior status, scope or
-  authority changes with unchanged status, and freshly authorized reactivation.
-  Do not treat all structurally valid active records as approved.
-- Clarify preservation of external history references and their authorization
-  basis during exchange, including unavailable evidence and stale copies.
-  Issue #5 specifies safe-use constraints, not a synchronization or distributed
-  freshness protocol; do not imply that a schema proves current eligibility.
-- Separate structural fixture validation from behavioral conformance checks.
-  `examples/invalid/revoked-behavioral-retrieval.json` is a legacy-shaped
-  retrieval envelope demonstrating unsafe behavior, not a v0.2.1 record-schema
-  negative test. It needs a semantic check, not merely a schema failure.
-- Define legacy adaptation more precisely: the legacy schema uses different
-  kinds, lifecycle, provenance, and relation shapes; its `type` to `kind` table
-  is not a complete conversion algorithm. Legacy validation is separate from
-  v0.2.1 validation and is optional.
-- Review relation direction in the promoted capability's `evidence_for` edge
-  and the revoked example's `supersedes` edge before using those fixtures as
-  semantic conformance evidence. Their structural validity is unchanged.
-- Decide whether portable exchange should eventually have stronger guarantees;
-  this pass retains ACFS-Portable's existing SHOULD requirements and does not
-  create an exchange protocol or new profile.
+| Prior inconsistency or gap | Resolution |
+| --- | --- |
+| Custom kinds/relations allowed by prose but rejected by the schema | Keep all base enums closed. Map custom kinds to an appropriate Core kind and put custom edges in a declared namespaced payload. Validate base plus supported extension constraints. |
+| Required extension handling lacked a portable declaration | Use the existing `metadata.extensions` list plus conditional `metadata.required_extensions`; require the latter to be a subset of the former. Unsupported requirements cannot guide behavior. No new required Core field or registry. |
+| Governance history had meanings but no common discovery mechanism | Conditional `metadata.governance` locates embedded, related-record, or external evidence under a documented versioned mapping. Existing histories can be adapted; unsupported/inaccessible required evidence cannot imply approval. |
+| A schema-valid active record could be mistaken for authorized guidance | Validation documentation and isolated cases separate base, extension, and semantic outcomes, using explicit synthetic authority inputs. |
+| A revoked retrieval envelope was mixed with record-shape negatives | Validate it as a semantic negative separately from the legacy and base record schemas. |
+| Two example relations implied incorrect support/replacement direction | The promoted capability uses `derived_from` for its source evidence, not a reversed `evidence_for` edge. The revoked memory no longer claims to supersede current guidance without support. |
 
-## Deferred Demonstration — Issue #7
+The seven kinds, four statuses, required fields, Core contract, and #5 lifecycle
+and policy-bounded offline decisions are unchanged. Only a schema comment is
+added to the base schema; required version metadata remains enforced. Existing
+unknown optional metadata remains structurally acceptable. Previously native
+custom enum values require mapping at export because they already failed base
+validation. Governance exchange and conditional extension declarations may need
+adapters, not migrations of every Core record. No universal evidence payload or
+event schema is mandated.
 
-The README record and conformance's file-store illustration show the minimum
-portable contract without a runtime dependency. The complete cross-agent
-capture, approval, discovery, reuse, and correction scenario remains #7, after
-#6 aligns schema and conformance with the governance meanings established in
-#5. No new lifecycle fixture or runtime demonstration is introduced here.
+[Conformance Validation](validation.md) describes the reproducible checks and
+what they do not prove. [Governance Evidence Interchange](governance-evidence.md)
+defines discovery, interpretation, and safe handling of required evidence.
+
+## Remaining Demonstration and Limitations — Issue #7
+
+The full cross-agent capture, approval, discovery, reuse, correction, and
+withdrawal example remains #7. It should choose and document its actual evidence
+mapping, expose complete supporting histories, and provide independent trust
+inputs rather than treating a record's self-asserted authority as a grant.
+The isolated initial-activation fixture mapping is not a universal event schema
+or a claim of independent runtime interoperability.
+
+Remaining implementation choices include identity and evidence authenticity,
+external reference retention/access, content/revision binding, full transition
+chains and conflicting decisions, and policy-specific cache validity. Preserve
+the policy basis in effect at decision time when designing that demonstration.
+Legacy import still needs an explicit semantic adapter: `type` to `kind` is not
+literal enum substitution. ACFS-Portable's SHOULD requirements do not create a
+shared exchange protocol. No runtime, synchronization protocol, or full
+cross-agent demonstration is implemented in this pass.

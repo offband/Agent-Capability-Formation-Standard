@@ -1,0 +1,915 @@
+{
+  "defaults": {
+    "record": {
+      "id": "acfs:record:test:memory",
+      "kind": "memory",
+      "status": "active",
+      "scope": "workspace:example",
+      "title": "Release checklist",
+      "body": "A low-risk fact for isolated conformance checks.",
+      "metadata": {
+        "acfs_version": "v0.2.1",
+        "governance": {
+          "format": "https://example.org/acfs/test-evidence-v1",
+          "evidence": [
+            {
+              "embedded": {
+                "record": "acfs:record:test:memory",
+                "contributor": "codex",
+                "actor": "policy-process",
+                "policy": "policy:test/low-risk@1",
+                "authority": "workspace:example",
+                "at": "2026-10-16T00:00:00Z",
+                "from": null,
+                "to": "active",
+                "scope": "workspace:example",
+                "reason": "Established low-risk policy authorizes initial activation."
+              }
+            }
+          ]
+        }
+      },
+      "provenance": {
+        "actor": "codex",
+        "created_at": "2026-08-15T00:00:00Z",
+        "source": "repeated release validation workflow"
+      },
+      "risk": "low"
+    },
+    "context": {
+      "scope": "workspace:example",
+      "grants": [
+        {
+          "policy": "policy:test/low-risk@1",
+          "authority": "workspace:example",
+          "scope": "workspace:example",
+          "kind": "memory",
+          "risk": "low"
+        }
+      ]
+    }
+  },
+  "cases": [
+    {
+      "name": "policy-automatic-initial-activation",
+      "expected": "eligible"
+    },
+    {
+      "name": "related-record-evidence",
+      "expected": "eligible",
+      "records": {
+        "acfs:record:test:evidence": {
+          "id": "acfs:record:test:evidence",
+          "kind": "evidence",
+          "status": "active",
+          "scope": "workspace:example",
+          "title": "Release checklist",
+          "body": "A low-risk fact for isolated conformance checks.",
+          "metadata": {
+            "acfs_version": "v0.2.1",
+            "test_evidence": {
+              "record": "acfs:record:test:memory",
+              "contributor": "codex",
+              "actor": "policy-process",
+              "policy": "policy:test/low-risk@1",
+              "authority": "workspace:example",
+              "at": "2026-10-16T00:00:00Z",
+              "from": null,
+              "to": "active",
+              "scope": "workspace:example",
+              "reason": "Established low-risk policy authorizes initial activation."
+            }
+          },
+          "provenance": {
+            "actor": "codex",
+            "created_at": "2026-08-15T00:00:00Z",
+            "source": "repeated release validation workflow"
+          },
+          "risk": "low"
+        }
+      },
+      "record": {
+        "metadata": {
+          "acfs_version": "v0.2.1",
+          "governance": {
+            "format": "https://example.org/acfs/test-evidence-v1",
+            "evidence": [
+              {
+                "record": "acfs:record:test:evidence"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "external-evidence",
+      "expected": "eligible",
+      "resources": {
+        "urn:example:evidence:1": {
+          "record": "acfs:record:test:memory",
+          "contributor": "codex",
+          "actor": "policy-process",
+          "policy": "policy:test/low-risk@1",
+          "authority": "workspace:example",
+          "at": "2026-10-16T00:00:00Z",
+          "from": null,
+          "to": "active",
+          "scope": "workspace:example",
+          "reason": "Established low-risk policy authorizes initial activation."
+        }
+      },
+      "record": {
+        "metadata": {
+          "acfs_version": "v0.2.1",
+          "governance": {
+            "format": "https://example.org/acfs/test-evidence-v1",
+            "evidence": [
+              {
+                "uri": "urn:example:evidence:1"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "authorized-review",
+      "expected": "eligible",
+      "record": {
+        "metadata": {
+          "acfs_version": "v0.2.1",
+          "governance": {
+            "format": "https://example.org/acfs/test-evidence-v1",
+            "evidence": [
+              {
+                "embedded": {
+                  "record": "acfs:record:test:memory",
+                  "contributor": "codex",
+                  "actor": "user:reviewer",
+                  "authority": "workspace:example",
+                  "at": "2026-10-16T00:00:00Z",
+                  "from": null,
+                  "to": "active",
+                  "scope": "workspace:example",
+                  "reason": "Reviewer approved this scoped record.",
+                  "reviewer": "user:reviewer"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "context": {
+        "grants": [
+          {
+            "reviewer": "user:reviewer",
+            "authority": "workspace:example",
+            "scope": "workspace:example",
+            "kind": "memory",
+            "risk": "low"
+          }
+        ]
+      }
+    },
+    {
+      "name": "active-without-evidence",
+      "expected": "missing-evidence",
+      "record": {
+        "metadata": {
+          "acfs_version": "v0.2.1"
+        }
+      }
+    },
+    {
+      "name": "unknown-evidence-format",
+      "expected": "unsupported-evidence",
+      "record": {
+        "metadata": {
+          "acfs_version": "v0.2.1",
+          "governance": {
+            "format": "urn:example:unknown",
+            "evidence": [
+              {
+                "embedded": {
+                  "record": "acfs:record:test:memory",
+                  "contributor": "codex",
+                  "actor": "policy-process",
+                  "policy": "policy:test/low-risk@1",
+                  "authority": "workspace:example",
+                  "at": "2026-10-16T00:00:00Z",
+                  "from": null,
+                  "to": "active",
+                  "scope": "workspace:example",
+                  "reason": "Established low-risk policy authorizes initial activation."
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "inaccessible-evidence",
+      "expected": "inaccessible-evidence",
+      "record": {
+        "metadata": {
+          "acfs_version": "v0.2.1",
+          "governance": {
+            "format": "https://example.org/acfs/test-evidence-v1",
+            "evidence": [
+              {
+                "uri": "urn:example:inaccessible"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "incomplete-evidence",
+      "expected": "incomplete-evidence",
+      "record": {
+        "metadata": {
+          "acfs_version": "v0.2.1",
+          "governance": {
+            "format": "https://example.org/acfs/test-evidence-v1",
+            "evidence": [
+              {
+                "embedded": {
+                  "record": "acfs:record:test:memory",
+                  "contributor": "codex",
+                  "actor": "policy-process",
+                  "policy": "policy:test/low-risk@1",
+                  "authority": "workspace:example",
+                  "at": "2026-10-16T00:00:00Z",
+                  "from": null,
+                  "to": "active",
+                  "scope": "workspace:example"
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "mismatched-evidence-scope",
+      "expected": "mismatched-evidence",
+      "record": {
+        "metadata": {
+          "acfs_version": "v0.2.1",
+          "governance": {
+            "format": "https://example.org/acfs/test-evidence-v1",
+            "evidence": [
+              {
+                "embedded": {
+                  "record": "acfs:record:test:memory",
+                  "contributor": "codex",
+                  "actor": "policy-process",
+                  "policy": "policy:test/low-risk@1",
+                  "authority": "workspace:example",
+                  "at": "2026-10-16T00:00:00Z",
+                  "from": null,
+                  "to": "active",
+                  "scope": "workspace:elsewhere",
+                  "reason": "Established low-risk policy authorizes initial activation."
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "contributor-without-review-authority",
+      "expected": "unauthorized",
+      "record": {
+        "metadata": {
+          "acfs_version": "v0.2.1",
+          "governance": {
+            "format": "https://example.org/acfs/test-evidence-v1",
+            "evidence": [
+              {
+                "embedded": {
+                  "record": "acfs:record:test:memory",
+                  "contributor": "codex",
+                  "actor": "policy-process",
+                  "authority": "workspace:example",
+                  "at": "2026-10-16T00:00:00Z",
+                  "from": null,
+                  "to": "active",
+                  "scope": "workspace:example",
+                  "reason": "Established low-risk policy authorizes initial activation.",
+                  "reviewer": "codex"
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "denied-review-is-not-activation",
+      "expected": "mismatched-evidence",
+      "record": {
+        "metadata": {
+          "acfs_version": "v0.2.1",
+          "governance": {
+            "format": "https://example.org/acfs/test-evidence-v1",
+            "evidence": [
+              {
+                "embedded": {
+                  "record": "acfs:record:test:memory",
+                  "contributor": "codex",
+                  "actor": "policy-process",
+                  "policy": "policy:test/low-risk@1",
+                  "authority": "workspace:example",
+                  "at": "2026-10-16T00:00:00Z",
+                  "from": null,
+                  "to": "draft",
+                  "scope": "workspace:example",
+                  "reason": "Approval denied."
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "low-risk-policy-not-high-risk-authorization",
+      "expected": "unauthorized",
+      "record": {
+        "kind": "capability",
+        "risk": "high"
+      }
+    },
+    {
+      "name": "draft-is-not-default-guidance",
+      "expected": "non-active",
+      "record": {
+        "status": "draft",
+        "metadata": {
+          "acfs_version": "v0.2.1"
+        }
+      }
+    },
+    {
+      "name": "out-of-scope-use",
+      "expected": "out-of-scope",
+      "context": {
+        "scope": "workspace:other"
+      }
+    },
+    {
+      "name": "known-revoked",
+      "expected": "non-active",
+      "record": {
+        "status": "revoked"
+      }
+    },
+    {
+      "name": "known-superseded",
+      "expected": "non-active",
+      "record": {
+        "status": "superseded"
+      }
+    },
+    {
+      "name": "unknown-optional-extension",
+      "expected": "eligible",
+      "record": {
+        "metadata": {
+          "acfs_version": "v0.2.1",
+          "governance": {
+            "format": "https://example.org/acfs/test-evidence-v1",
+            "evidence": [
+              {
+                "embedded": {
+                  "record": "acfs:record:test:memory",
+                  "contributor": "codex",
+                  "actor": "policy-process",
+                  "policy": "policy:test/low-risk@1",
+                  "authority": "workspace:example",
+                  "at": "2026-10-16T00:00:00Z",
+                  "from": null,
+                  "to": "active",
+                  "scope": "workspace:example",
+                  "reason": "Established low-risk policy authorizes initial activation."
+                }
+              }
+            ]
+          },
+          "extensions": [
+            "unknown.optional.v1"
+          ]
+        }
+      }
+    },
+    {
+      "name": "unknown-required-extension",
+      "expected": "unsupported-required-extension",
+      "record": {
+        "metadata": {
+          "acfs_version": "v0.2.1",
+          "governance": {
+            "format": "https://example.org/acfs/test-evidence-v1",
+            "evidence": [
+              {
+                "embedded": {
+                  "record": "acfs:record:test:memory",
+                  "contributor": "codex",
+                  "actor": "policy-process",
+                  "policy": "policy:test/low-risk@1",
+                  "authority": "workspace:example",
+                  "at": "2026-10-16T00:00:00Z",
+                  "from": null,
+                  "to": "active",
+                  "scope": "workspace:example",
+                  "reason": "Established low-risk policy authorizes initial activation."
+                }
+              }
+            ]
+          },
+          "extensions": [
+            "unknown.optional.v1"
+          ],
+          "required_extensions": [
+            "unknown.optional.v1"
+          ]
+        }
+      }
+    },
+    {
+      "name": "undeclared-required-extension",
+      "expected": "invalid-declaration",
+      "record": {
+        "metadata": {
+          "acfs_version": "v0.2.1",
+          "governance": {
+            "format": "https://example.org/acfs/test-evidence-v1",
+            "evidence": [
+              {
+                "embedded": {
+                  "record": "acfs:record:test:memory",
+                  "contributor": "codex",
+                  "actor": "policy-process",
+                  "policy": "policy:test/low-risk@1",
+                  "authority": "workspace:example",
+                  "at": "2026-10-16T00:00:00Z",
+                  "from": null,
+                  "to": "active",
+                  "scope": "workspace:example",
+                  "reason": "Established low-risk policy authorizes initial activation."
+                }
+              }
+            ]
+          },
+          "required_extensions": [
+            "unknown.v1"
+          ]
+        }
+      }
+    },
+    {
+      "name": "malformed-extension-declaration",
+      "expected": "invalid-declaration",
+      "record": {
+        "metadata": {
+          "acfs_version": "v0.2.1",
+          "governance": {
+            "format": "https://example.org/acfs/test-evidence-v1",
+            "evidence": [
+              {
+                "embedded": {
+                  "record": "acfs:record:test:memory",
+                  "contributor": "codex",
+                  "actor": "policy-process",
+                  "policy": "policy:test/low-risk@1",
+                  "authority": "workspace:example",
+                  "at": "2026-10-16T00:00:00Z",
+                  "from": null,
+                  "to": "active",
+                  "scope": "workspace:example",
+                  "reason": "Established low-risk policy authorizes initial activation."
+                }
+              }
+            ]
+          },
+          "extensions": "not-an-array"
+        }
+      }
+    },
+    {
+      "name": "invalid-required-extension-payload",
+      "expected": "invalid-extension",
+      "record": {
+        "metadata": {
+          "acfs_version": "v0.2.1",
+          "governance": {
+            "format": "https://example.org/acfs/test-evidence-v1",
+            "evidence": [
+              {
+                "embedded": {
+                  "record": "acfs:record:test:memory",
+                  "contributor": "codex",
+                  "actor": "policy-process",
+                  "policy": "policy:test/low-risk@1",
+                  "authority": "workspace:example",
+                  "at": "2026-10-16T00:00:00Z",
+                  "from": null,
+                  "to": "active",
+                  "scope": "workspace:example",
+                  "reason": "Established low-risk policy authorizes initial activation."
+                }
+              }
+            ]
+          },
+          "extensions": [
+            "example.procedure.v1"
+          ],
+          "required_extensions": [
+            "example.procedure.v1"
+          ],
+          "example.procedure.v1": {
+            "kind": "procedure",
+            "relations": [
+              {
+                "type": "reviewed_by"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "name": "previously-verified-offline-evidence",
+      "expected": "eligible",
+      "cached_evidence": {
+        "record": "acfs:record:test:memory",
+        "contributor": "codex",
+        "actor": "policy-process",
+        "policy": "policy:test/low-risk@1",
+        "authority": "workspace:example",
+        "at": "2026-10-16T00:00:00Z",
+        "from": null,
+        "to": "active",
+        "scope": "workspace:example",
+        "reason": "Established low-risk policy authorizes initial activation."
+      },
+      "record": {
+        "metadata": {
+          "acfs_version": "v0.2.1",
+          "governance": {
+            "format": "https://example.org/acfs/test-evidence-v1",
+            "evidence": [
+              {
+                "uri": "urn:example:offline"
+              }
+            ]
+          }
+        }
+      },
+      "context": {
+        "cache": {
+          "offline_permitted": true,
+          "valid_from": "2026-10-16T00:00:00Z",
+          "valid_until": "2026-10-16T01:00:00Z",
+          "now": "2026-10-16T00:30:00Z",
+          "scope": "workspace:example",
+          "kind": "memory",
+          "risk": "low",
+          "reconnected": false,
+          "verification_required": false,
+          "known_withdrawal": false
+        }
+      }
+    },
+    {
+      "name": "expired-offline-window",
+      "expected": "verification-required",
+      "cached_evidence": {
+        "record": "acfs:record:test:memory",
+        "contributor": "codex",
+        "actor": "policy-process",
+        "policy": "policy:test/low-risk@1",
+        "authority": "workspace:example",
+        "at": "2026-10-16T00:00:00Z",
+        "from": null,
+        "to": "active",
+        "scope": "workspace:example",
+        "reason": "Established low-risk policy authorizes initial activation."
+      },
+      "record": {
+        "metadata": {
+          "acfs_version": "v0.2.1",
+          "governance": {
+            "format": "https://example.org/acfs/test-evidence-v1",
+            "evidence": [
+              {
+                "uri": "urn:example:offline"
+              }
+            ]
+          }
+        }
+      },
+      "context": {
+        "cache": {
+          "offline_permitted": true,
+          "valid_from": "2026-10-16T00:00:00Z",
+          "valid_until": "2026-10-16T01:00:00Z",
+          "now": "2026-10-16T01:00:00Z",
+          "scope": "workspace:example",
+          "kind": "memory",
+          "risk": "low",
+          "reconnected": false,
+          "verification_required": false,
+          "known_withdrawal": false
+        }
+      }
+    },
+    {
+      "name": "reconnected-requires-verification",
+      "expected": "verification-required",
+      "cached_evidence": {
+        "record": "acfs:record:test:memory",
+        "contributor": "codex",
+        "actor": "policy-process",
+        "policy": "policy:test/low-risk@1",
+        "authority": "workspace:example",
+        "at": "2026-10-16T00:00:00Z",
+        "from": null,
+        "to": "active",
+        "scope": "workspace:example",
+        "reason": "Established low-risk policy authorizes initial activation."
+      },
+      "record": {
+        "metadata": {
+          "acfs_version": "v0.2.1",
+          "governance": {
+            "format": "https://example.org/acfs/test-evidence-v1",
+            "evidence": [
+              {
+                "uri": "urn:example:offline"
+              }
+            ]
+          }
+        }
+      },
+      "context": {
+        "cache": {
+          "offline_permitted": true,
+          "valid_from": "2026-10-16T00:00:00Z",
+          "valid_until": "2026-10-16T01:00:00Z",
+          "now": "2026-10-16T00:30:00Z",
+          "scope": "workspace:example",
+          "kind": "memory",
+          "risk": "low",
+          "reconnected": true,
+          "verification_required": false,
+          "known_withdrawal": false
+        }
+      }
+    },
+    {
+      "name": "policy-requires-verification",
+      "expected": "verification-required",
+      "cached_evidence": {
+        "record": "acfs:record:test:memory",
+        "contributor": "codex",
+        "actor": "policy-process",
+        "policy": "policy:test/low-risk@1",
+        "authority": "workspace:example",
+        "at": "2026-10-16T00:00:00Z",
+        "from": null,
+        "to": "active",
+        "scope": "workspace:example",
+        "reason": "Established low-risk policy authorizes initial activation."
+      },
+      "record": {
+        "metadata": {
+          "acfs_version": "v0.2.1",
+          "governance": {
+            "format": "https://example.org/acfs/test-evidence-v1",
+            "evidence": [
+              {
+                "uri": "urn:example:offline"
+              }
+            ]
+          }
+        }
+      },
+      "context": {
+        "cache": {
+          "offline_permitted": true,
+          "valid_from": "2026-10-16T00:00:00Z",
+          "valid_until": "2026-10-16T01:00:00Z",
+          "now": "2026-10-16T00:30:00Z",
+          "scope": "workspace:example",
+          "kind": "memory",
+          "risk": "low",
+          "reconnected": false,
+          "verification_required": true,
+          "known_withdrawal": false
+        }
+      }
+    },
+    {
+      "name": "unknown-validity",
+      "expected": "verification-required",
+      "cached_evidence": {
+        "record": "acfs:record:test:memory",
+        "contributor": "codex",
+        "actor": "policy-process",
+        "policy": "policy:test/low-risk@1",
+        "authority": "workspace:example",
+        "at": "2026-10-16T00:00:00Z",
+        "from": null,
+        "to": "active",
+        "scope": "workspace:example",
+        "reason": "Established low-risk policy authorizes initial activation."
+      },
+      "record": {
+        "metadata": {
+          "acfs_version": "v0.2.1",
+          "governance": {
+            "format": "https://example.org/acfs/test-evidence-v1",
+            "evidence": [
+              {
+                "uri": "urn:example:offline"
+              }
+            ]
+          }
+        }
+      },
+      "context": {
+        "cache": {
+          "offline_permitted": true,
+          "valid_from": "2026-10-16T00:00:00Z",
+          "valid_until": null,
+          "now": "2026-10-16T00:30:00Z",
+          "scope": "workspace:example",
+          "kind": "memory",
+          "risk": "low",
+          "reconnected": false,
+          "verification_required": false,
+          "known_withdrawal": false
+        }
+      }
+    },
+    {
+      "name": "known-withdrawal-overrides-window",
+      "expected": "non-active",
+      "cached_evidence": {
+        "record": "acfs:record:test:memory",
+        "contributor": "codex",
+        "actor": "policy-process",
+        "policy": "policy:test/low-risk@1",
+        "authority": "workspace:example",
+        "at": "2026-10-16T00:00:00Z",
+        "from": null,
+        "to": "active",
+        "scope": "workspace:example",
+        "reason": "Established low-risk policy authorizes initial activation."
+      },
+      "record": {
+        "metadata": {
+          "acfs_version": "v0.2.1",
+          "governance": {
+            "format": "https://example.org/acfs/test-evidence-v1",
+            "evidence": [
+              {
+                "uri": "urn:example:offline"
+              }
+            ]
+          }
+        }
+      },
+      "context": {
+        "cache": {
+          "offline_permitted": true,
+          "valid_from": "2026-10-16T00:00:00Z",
+          "valid_until": "2026-10-16T01:00:00Z",
+          "now": "2026-10-16T00:30:00Z",
+          "scope": "workspace:example",
+          "kind": "memory",
+          "risk": "low",
+          "reconnected": false,
+          "verification_required": false,
+          "known_withdrawal": true
+        }
+      }
+    },
+    {
+      "name": "supported-required-extension",
+      "expected": "eligible",
+      "record": {
+        "kind": "capability",
+        "metadata": {
+          "acfs_version": "v0.2.1",
+          "governance": {
+            "format": "https://example.org/acfs/test-evidence-v1",
+            "evidence": [
+              {
+                "embedded": {
+                  "record": "acfs:record:test:memory",
+                  "contributor": "codex",
+                  "actor": "policy-process",
+                  "policy": "policy:test/low-risk@1",
+                  "authority": "workspace:example",
+                  "at": "2026-10-16T00:00:00Z",
+                  "from": null,
+                  "to": "active",
+                  "scope": "workspace:example",
+                  "reason": "Established low-risk policy authorizes initial activation."
+                }
+              }
+            ]
+          },
+          "extensions": [
+            "example.procedure.v1"
+          ],
+          "required_extensions": [
+            "example.procedure.v1"
+          ],
+          "example.procedure.v1": {
+            "kind": "procedure",
+            "relations": []
+          }
+        }
+      },
+      "context": {
+        "grants": [
+          {
+            "policy": "policy:test/low-risk@1",
+            "authority": "workspace:example",
+            "scope": "workspace:example",
+            "kind": "capability",
+            "risk": "low"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ambiguous-evidence-locator",
+      "record": {
+        "metadata": {
+          "acfs_version": "v0.2.1",
+          "governance": {
+            "format": "https://example.org/acfs/test-evidence-v1",
+            "evidence": [
+              {
+                "embedded": {
+                  "record": "acfs:record:test:memory",
+                  "contributor": "codex",
+                  "actor": "policy-process",
+                  "policy": "policy:test/low-risk@1",
+                  "authority": "workspace:example",
+                  "at": "2026-10-16T00:00:00Z",
+                  "from": null,
+                  "to": "active",
+                  "scope": "workspace:example",
+                  "reason": "Established low-risk policy authorizes initial activation."
+                },
+                "uri": "urn:example:unexpected"
+              }
+            ]
+          }
+        }
+      },
+      "expected": "missing-evidence"
+    },
+    {
+      "name": "one-available-locator-is-not-complete-history",
+      "record": {
+        "metadata": {
+          "acfs_version": "v0.2.1",
+          "governance": {
+            "format": "https://example.org/acfs/test-evidence-v1",
+            "evidence": [
+              {
+                "embedded": {
+                  "record": "acfs:record:test:memory",
+                  "contributor": "codex",
+                  "actor": "policy-process",
+                  "policy": "policy:test/low-risk@1",
+                  "authority": "workspace:example",
+                  "at": "2026-10-16T00:00:00Z",
+                  "from": null,
+                  "to": "active",
+                  "scope": "workspace:example",
+                  "reason": "Established low-risk policy authorizes initial activation."
+                }
+              },
+              {
+                "uri": "urn:example:missing-part"
+              }
+            ]
+          }
+        }
+      },
+      "expected": "inaccessible-evidence"
+    }
+  ]
+}
