@@ -9,7 +9,8 @@ transition-evidence requirements below apply only to ACFS-Governance.
 - **draft**: captured but not default behavioral guidance.
 - **active**: eligible for behavioral recall inside scope.
 - **superseded**: replaced by a newer active record.
-- **revoked**: withdrawn and MUST NOT guide future behavior.
+- **revoked**: withdrawn; consumers MUST NOT knowingly use it as authoritative
+  guidance.
 
 ## Draft
 
@@ -47,8 +48,8 @@ for the affected scope. A `supersedes` relation alone MUST NOT activate a
 replacement or authorize withdrawal of the prior guidance. The replacement MUST
 have its own authorized activation before it is used as guidance.
 
-Once superseded, a record MUST NOT remain authoritative guidance. It MAY be
-shown as clearly identified historical or explanatory context, not as an
+Consumers MUST NOT knowingly use a superseded record as authoritative guidance.
+It MAY be shown as clearly identified historical or explanatory context, not as an
 instruction to apply. Implementations MUST distinguish the superseded record
 from its replacement. Loss or revocation of the replacement MUST NOT silently
 reactivate the old record. Superseded records SHOULD remain inspectable unless
@@ -57,10 +58,14 @@ retention or redaction policy removes them.
 ## Revoked
 
 Revocation MUST be permitted by applicable policy or an authorized reviewer for
-the affected scope. Revocation removes behavioral eligibility; revoked records
-MUST NOT guide future behavior, including through a cached copy or projection.
+the affected scope. Revocation removes behavioral eligibility. Consumers MUST
+NOT knowingly use revoked records as authoritative guidance, including through
+a cached copy or projection. A disconnected consumer's status observation may
+lag a withdrawal elsewhere; policy-authorized offline use and its limits are
+defined in [Projection](projection.md#caching-and-indexing). Cache validity does
+not override a known withdrawal or itself authorize activation.
 
-Revoked records MUST NOT be returned by default behavioral recall. They MAY be
+Known revoked records MUST NOT be returned by default behavioral recall. They MAY be
 returned for audit retrieval when explicitly requested and authorized.
 
 ## Promotion
@@ -150,7 +155,7 @@ hierarchy, an approval mechanism, or a policy language.
 | --- | --- |
 | An agent submits a structurally valid capability but lacks approval authority. | Submission and validation do not authorize activation. The submission may be rejected or retained as draft unless independently authorized policy or review permits activation; a requested `active` status cannot supply the missing authority. |
 | An established policy automatically activates a low-risk record. | Activation is permitted without a separate human review when the policy applies to the record and scope. Under ACFS-Governance, the contributor, applying process, policy basis, applicable authority, timestamp, transition, and reason remain inspectable, with automatic activation identified. |
-| An active capability is revoked while another participant holds a cached copy. | The cached `active` value is not renewed authorization. The participant must stop using the copy as guidance when revoked and must not use it when current eligibility cannot be established. The copy may be retained for authorized audit; any later activation requires fresh authorization. |
+| An active capability is revoked while another participant holds a cached copy. | The cached `active` value is not approval or renewed authority. Explicit policy may allow offline use within a defined validity window and risk boundaries before the participant learns of revocation elsewhere. It MUST stop authoritative use upon learning of withdrawal and MUST obtain fresh verification on reconnection, expiry, uncertain validity, or when policy requires it. Without verification when due, it MUST withhold guidance. Audit retention remains possible; reactivation requires fresh authorization. |
 
 Cache and projection freshness obligations are specified in
 [Projection](projection.md#caching-and-indexing). These cases define semantic
@@ -173,7 +178,8 @@ ACFS-compatible implementations:
 - MUST preserve record status.
 - MUST require applicable policy or authorized review for activation and
   authority-changing lifecycle decisions.
-- MUST prevent revoked records from guiding future behavior.
+- MUST prevent knowingly using revoked or superseded records as authoritative
+  guidance and follow the policy-bounded cache rules in projection.
 - SHOULD preserve transition history.
 - SHOULD represent substantive changes through new or superseding records.
 - MUST NOT allow status to override scope or revocation rules.

@@ -146,11 +146,13 @@ Default behavioral retrieval SHOULD return active records within the requested
 scope.
 
 Draft records MAY be exposed for authorized review or drafting, not as default
-guidance. Superseded records MUST NOT remain authoritative guidance; they MAY
-be exposed as clearly identified historical or explanatory context. Audit
+guidance. Known superseded records MUST NOT remain authoritative guidance; they
+MAY be exposed as clearly identified historical or explanatory context. Audit
 visibility does not confer behavioral eligibility.
 
-Revoked records MUST NOT be returned for behavioral guidance.
+Consumers and implementations MUST NOT knowingly return or use revoked or
+superseded records as authoritative guidance. Policy-authorized offline use
+follows [Projection](../specifications/projection.md#caching-and-indexing).
 
 Draft capability records MUST NOT be returned as reusable behavior by default.
 
@@ -161,9 +163,23 @@ authorized Consumer.
 
 Implementations MUST support revocation.
 
-A revoked record MUST NOT guide future agent behavior, including through
-cached copies or projections. Revocation MUST be authorized for the affected
-scope. Reactivation MUST obtain fresh authorization addressing the prior
+Consumers MUST NOT knowingly use revoked records as authoritative guidance,
+including through cached copies or projections. Revocation MUST be authorized
+for the affected scope. Applicable policy MAY permit cached or offline guidance
+within a defined validity window, scope, and risk boundaries, based on previously
+verified authorization and status. Cache validity is not approval, new authority,
+or an override of known withdrawal.
+
+Fresh verification MUST precede further use on reconnection, when authorization
+expires, validity cannot be established, or policy requires it. If verification
+cannot be obtained when due, the guidance MUST be withheld. High-risk policy MAY
+require continuous connectivity or immediate revalidation; offline permission
+MUST NOT bypass those requirements. Disconnected consumers may temporarily use
+guidance revoked elsewhere until reconnection and verification, authorized
+window expiry, or earlier knowledge of withdrawal. ACFS does not promise
+instantaneous consistency across disconnected participants.
+
+Reactivation MUST obtain fresh authorization addressing the prior
 withdrawal; old approval or a cached active value is insufficient. See
 [Lifecycle](../specifications/lifecycle.md#reactivation) and
 [Projection](../specifications/projection.md#caching-and-indexing).
@@ -189,8 +205,9 @@ A correction SHOULD identify the record it corrects.
 
 A superseding record SHOULD identify the record it replaces.
 
-Superseded records MUST NOT remain authoritative guidance. Supersession
-requires applicable policy or authorized review; a replacement requires its own
+Consumers MUST NOT knowingly use superseded records as authoritative guidance.
+Supersession requires applicable policy or authorized review; a replacement
+requires its own
 authorized activation. Loss of a replacement MUST NOT reactivate old guidance.
 The stronger ACFS-Governance history requirements apply to both supersession
 and revocation, including their reasons.
@@ -254,7 +271,8 @@ graph stores, object storage, MCP tools, MCP resources, or other transports.
 Transport availability MUST NOT override status, authority, scope, risk,
 retrieval, or revocation rules.
 
-Storage availability MUST NOT cause revoked records to guide future behavior.
+Storage or cache availability MUST NOT justify knowingly using withdrawn
+guidance or extending policy-authorized validity windows without verification.
 
 ## Requirements
 
@@ -262,7 +280,8 @@ ACFS-compatible implementations:
 
 - MUST treat durable record operations as security-sensitive.
 - MUST support revocation.
-- MUST prevent revoked records from guiding future behavior.
+- MUST prevent knowingly using revoked or superseded records as authoritative
+  guidance and enforce the policy-bounded offline-use rules in projection.
 - MUST preserve scope and authority boundaries.
 - MUST preserve required creation provenance.
 - SHOULD preserve audit history; ACFS-Governance MUST retain the evidence

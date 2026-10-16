@@ -56,7 +56,7 @@ authority, conformance, trust and safety, record status rules, and projection.
 | High-risk capability authorization was mandatory in some documents but review only recommended elsewhere. | Explicit authorization must cover high-risk capability behavior, scope, and risk. A write permission or low-risk auto-activation rule is insufficient; human review is not universally required. |
 | Contributor/reviewer identity and authority metadata could be conflated. | Submission does not grant approval authority. Self-review requires independent policy authorization. Governance evidence identifies the roles and applicable authority; Core does not acquire a mandatory authority field. |
 | Governance transition history only required reasons “when available.” | Governance requires inspectable record/contributor, transition actor, reviewer or authorizing policy, applicable authority, timestamp, prior/resulting status and scope, and reason. Initial/automatic activation and scope/authority changes are included. |
-| Superseded guidance was only discouraged, and cache refresh only recommended. | Superseded records cannot remain authoritative, revoked records lose eligibility, cached copies cannot override withdrawal, and reactivation requires fresh authorization. Historical inspection remains possible. |
+| Superseded guidance was only discouraged, and cache refresh only recommended. | Known superseded or revoked records cannot be used authoritatively; policy may permit offline use of previously verified guidance within defined validity windows and risk boundaries. Verification is required on reconnection, expiry, uncertain validity, or policy demand; reactivation requires fresh authorization. Historical inspection remains possible. |
 
 The three required edge cases are documented as semantic outcomes in
 [Lifecycle](lifecycle.md#required-edge-cases): valid submission without approval
@@ -69,14 +69,21 @@ provenance extensions, related records, or inspectable implementation history;
 there is no new mandatory event schema. Existing Core records remain valid.
 Implementations claiming ACFS-Governance may need to retain more evidence than
 before, especially reasons and policy bases. Implementations relying on
-superseded guidance, implicit self-approval, or stale active caches must change
-that behavior to meet the clarified safety contract. Structural validation
+known superseded guidance, implicit self-approval, or cached use outside an
+authorized validity window must change that behavior to meet the clarified safety contract. Structural validation
 alone does not demonstrate this semantic conformance.
 
 ACFS does not supply policy evaluation, identity verification, cache delivery,
 or instantaneous revocation notifications. Implementations must document their
-eligibility and evidence handling; unsupported evidence or uncertain current
-eligibility cannot be made authoritative by a valid JSON shape.
+validity and evidence handling. Explicit policy may permit offline guidance
+within a bounded validity window and risk boundaries. Consumers must verify on
+reconnection, expiry, uncertain validity, or policy demand; a cache window is
+not approval and cannot override known withdrawal. Disconnected consumers may
+temporarily use guidance revoked elsewhere until reconnection and verification,
+window expiry, or earlier knowledge of withdrawal. This consistency limitation
+does not change the lifecycle states or permit knowingly using withdrawn
+guidance. High-risk policy may demand continuous connectivity or immediate
+revalidation; no new service, profile, or synchronization protocol is introduced.
 
 ## Deferred Schema and Conformance Questions — Issue #6
 

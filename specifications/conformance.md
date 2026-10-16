@@ -26,7 +26,10 @@ An ACFS-Records implementation MUST:
 - Preserve status and scope.
 - Preserve provenance.
 - Preserve `metadata.acfs_version: "v0.2.1"` on v0.2.1 records.
-- Prevent revoked records from guiding future behavior.
+- Prevent knowingly using revoked or superseded records as authoritative
+  guidance, including enforcement of the policy-authorized validity windows and
+  verification rules in [Projection](projection.md#caching-and-indexing) when
+  cached or offline guidance is provided.
 - Apply records only inside their declared scope unless explicitly broadened
   by policy or an authorized reviewer.
 - Support revocation and preserve the meanings of `draft`, `active`,
@@ -93,6 +96,11 @@ An ACFS-Governance implementation MUST support ACFS-Records and MUST:
 - Make the evidence inspectable by authorized consumers through a documented
   representation, without requiring a particular history schema.
 
+Governance evidence identifies the authorization basis; a cached copy of that
+evidence does not itself approve use, renew authority, or override withdrawal.
+Policy-authorized offline use follows the validity windows, risk boundaries,
+and verification rules in [Projection](projection.md#caching-and-indexing).
+
 These stronger evidence requirements do not add required fields to every Core
 record. Automatic activation remains permitted by applicable policy; a separate
 human reviewer is not mandatory.
@@ -118,7 +126,8 @@ retrieval.
 An ACFS-Retrieval implementation MUST support ACFS-Records and MUST:
 
 - Distinguish behavioral recall from audit retrieval.
-- Prevent revoked records from behavioral recall.
+- Prevent knowingly returning revoked or superseded records as authoritative
+  guidance; cached recall follows the validity and verification rules in projection.
 - Expose status in retrieval results.
 - Enforce scope during behavioral recall.
 
