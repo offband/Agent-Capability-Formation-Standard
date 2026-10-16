@@ -7,7 +7,8 @@ records or forcing every implementation to support every feature.
 
 ACFS documents SHOULD identify the standard version or revision they target.
 
-Records MAY include a standard version in metadata:
+Records claiming ACFS v0.2.1 MUST include `metadata.acfs_version: "v0.2.1"`,
+as required by the record specification and schema:
 
 ```json
 {
@@ -35,13 +36,15 @@ implementation understands their meaning.
 
 ACFS v0.2.1 uses named profiles so simple implementations can stay small.
 
-Base implementations SHOULD claim `ACFS-Records`.
+Implementations claiming ACFS compatibility MUST support `ACFS-Records`, which
+is ACFS Core. Other profiles are optional additions; see [Conformance](conformance.md).
 
 Implementations MAY additionally claim:
 
 - `ACFS-Capabilities`
 - `ACFS-Governance`
 - `ACFS-Relations`
+- `ACFS-Retrieval`
 - `ACFS-MCP`
 - `ACFS-Portable`
 - `ACFS-Legacy-Capability-Records`

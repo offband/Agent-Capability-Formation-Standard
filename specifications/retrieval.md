@@ -1,6 +1,7 @@
 # Retrieval
 
-ACFS retrieval is recall for durable agent records.
+ACFS retrieval is recall for durable agent records. This document specifies the
+optional ACFS-Retrieval profile; Core does not require these services.
 
 The default consumer is an agent starting or resuming work. It needs a compact,
 scoped set of relevant records, not a raw archive.

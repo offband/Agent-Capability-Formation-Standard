@@ -29,6 +29,11 @@ surface:
 - `acfs.promote_capability`: promote a draft capability when authorized.
 - `acfs.conformance`: return supported profiles, versions, and limits.
 
+These recommendations apply to supported features; the binding does not make
+ACFS-Retrieval or ACFS-Capabilities mandatory. Implementations MUST document
+which optional profiles their tools support and MUST NOT claim unsupported
+profile behavior. Core does not require this tool surface.
+
 Implementations MAY expose additional tools when documented.
 
 ## Server Instructions

@@ -1,31 +1,26 @@
 # Agent Capability Formation Standard
 
-ACFS v0.2.1 defines a durable record primitive for agent workspaces.
+ACFS standardizes governed, reusable agent context through durable, scoped
+records whose status and provenance constrain their use as guidance.
 
 ## Version
 
-The current release is **v0.2.1**. ACFS Core in this release covers durable
-records, scoped recall, state capsules, and capability lifecycle.
+The current release is **v0.2.1**. **ACFS Core is ACFS-Records**, the minimum
+compatibility profile defined in [Conformance](specifications/conformance.md).
+Its foundational primitive is the governed contextual record: identity, kind,
+content, scope, provenance, version metadata, and the existing four statuses.
 
-ACFS Core is deliberately small: durable records, scoped recall, state
-capsules, and capability lifecycle. An agent should be able to persist and
-recall the durable facts that make a workspace reliable across sessions,
-reboots, model changes, and tool boundaries. Those records may capture memory,
-decisions, standards, evidence, issues, handoffs, and draft capabilities.
+Core preserves these record meanings and safe behavioral use. Capability
+formation and promotion services, richer governance and relation services,
+recall, search, state capsules, projections, transport bindings, and portable
+exchange services are optional. Their safety rules apply when those features
+are provided; optional does not mean that status or scope can be bypassed.
 
-ACFS is not a chat history format, storage engine, app framework, or
-inter-agent message bus. It does not define runtime execution, tool invocation,
-hosting, authentication, package managers, billing, or agent orchestration. It
-defines how agent-contributed records are written, addressed, scoped, recalled,
-summarized into state capsules, superseded, revoked, and promoted into reusable
-capability.
-
-ACFS is the portable standard. Implementations such as FlowOS may provide the
-runtime that saves, updates, executes, reviews, packages, and presents ACFS
-records and capabilities. Runtime objects such as artifacts, actions, runs,
-triggers, packages, and UI state are valid implementation concepts when they map
-cleanly to ACFS records, relations, metadata, or documented extensions at the
-portable boundary.
+ACFS is independent of FlowOS, MCP, GitHub, and specific agent runtimes. Storage,
+indexing, authentication, communication, scheduling, and tool execution belong
+to implementations. FlowOS is one possible implementation, not a dependency.
+ACFS complements instruction files, memory stores, and orchestration systems by
+standardizing the records they exchange and the limits on their authority.
 
 ## Requirement Language
 
@@ -36,12 +31,12 @@ when, and only when, they appear in all capitals.
 
 ## Core Primitive
 
-An ACFS Record is a durable, typed object written to an ACFS-compatible store
-so future agents can quickly recall relevant workspace context instead of
-reconstructing it from large prompt files or prior chat.
+An ACFS Record is a durable, addressable, typed, scoped object that preserves
+context and its provenance for reuse. Recording content or validating its shape
+does not itself authorize that content as guidance.
 
 The base profile is **ACFS-Records**. It requires only the fields needed for
-durable recall and safe behavioral use:
+durable context and safe behavioral use:
 
 ```json
 {
@@ -50,7 +45,7 @@ durable recall and safe behavioral use:
   "status": "active",
   "scope": "workspace:example",
   "title": "Use ACFS Records as the base primitive",
-  "body": "ACFS v0.2.1 centers on durable records, scoped recall, state capsules, and capability lifecycle.",
+  "body": "ACFS Core is ACFS-Records: governed, reusable contextual records.",
   "metadata": {
     "acfs_version": "v0.2.1"
   },
@@ -92,6 +87,9 @@ must not appear in behavioral recall.
 
 ## Capability Formation
 
+Formation services are optional; capability status and promotion safety still
+apply whenever capability records are used.
+
 Agents may draft capabilities when repeated behavior emerges. A capability can
 reference a skill, script, deterministic prompt, workflow, or external artifact,
 but executable or behavior-shaping capabilities MUST NOT become default
@@ -102,6 +100,9 @@ This preserves the useful part of the original ACFS idea: agents can form
 capabilities over time without turning every durable note into executable trust.
 
 ## Retrieval
+
+Retrieval services are optional under ACFS-Retrieval. Core does not require
+recall, search, or state capsule operations.
 
 ACFS retrieval should feel like recall, not archive browsing.
 
@@ -144,7 +145,7 @@ belongs to an implementation, such as FlowOS, not to ACFS itself.
 
 ## Profiles
 
-- **ACFS-Records**: minimum durable record and recall profile.
+- **ACFS-Records**: Core; minimum governed contextual record profile.
 - **ACFS-Capabilities**: draft/promoted capabilities and lifecycle.
 - **ACFS-Governance**: optional profile for review, authority, risk, lifecycle
   events, status history, and promotion policy.
@@ -176,7 +177,8 @@ requirements.
 - `specifications/projection.md`: behavioral and audit projections
 - `specifications/scope-and-authority.md`: scope and optional authority
 - `specifications/implementation-boundary.md`: standard/runtime boundary
-- `specifications/conformance.md`: compatibility profiles
+- `specifications/conformance.md`: authoritative Core contract and optional profiles
+- `specifications/core-audit.md`: compatibility findings and deferred #5–#7 work
 - `specifications/versioning-and-extensions.md`: extension/version rules
 - `specifications/workflow-artifacts.md`: non-core workflow artifact notes
 - `specifications/fabric-coordination.md`: non-core coordination fabric notes
