@@ -107,10 +107,15 @@ Default behavioral recall SHOULD return only `active` records.
 `draft` records MAY be returned for review, drafting, or audit. They SHOULD NOT
 be used as default behavioral guidance.
 
-`superseded` records SHOULD NOT guide future behavior when an active replacement
-exists.
+Consumers MUST NOT knowingly use `superseded` records as authoritative guidance.
+They MAY be exposed as clearly identified historical or explanatory context,
+as specified in
+[Lifecycle](lifecycle.md#superseded).
 
-`revoked` records MUST NOT guide future behavior.
+Consumers MUST NOT knowingly use `revoked` records as authoritative guidance.
+Policy-authorized cached or offline use, verification triggers, and disconnected
+consistency limits are defined in [Projection](projection.md#caching-and-indexing);
+these rules do not change record status or grant new authority.
 
 ## Revision and Mutation
 
@@ -131,7 +136,8 @@ ACFS-Records implementations:
 - MUST preserve scope.
 - MUST preserve provenance.
 - MUST preserve `metadata.acfs_version`.
-- MUST prevent revoked records from guiding future behavior.
+- MUST prevent knowingly using revoked or superseded records as authoritative
+  guidance, including cached use under the rules above.
 - SHOULD support import and export using the standard shape.
 - SHOULD support supersession without silent history loss.
 - MUST NOT allow metadata or transport availability to bypass status, scope, or

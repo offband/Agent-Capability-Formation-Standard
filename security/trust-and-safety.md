@@ -45,7 +45,7 @@ A Contributor SHOULD only be allowed to write records within authorized scopes.
 A Consumer SHOULD only retrieve records appropriate to its task, authority, trust
 level, risk tolerance, and execution context.
 
-A Reviewer SHOULD only change status within scopes where it is authorized to
+A Reviewer MUST only change status within scopes where it is authorized to
 act.
 
 Authority changes, scope broadening, revocation reversal, and high-risk
@@ -53,7 +53,10 @@ promotion SHOULD require stricter authorization than ordinary record writes.
 
 ## Provenance
 
-ACFS-compatible systems SHOULD preserve provenance for each ACFS record.
+ACFS-compatible systems MUST preserve required creation provenance for each
+ACFS record. Additional review and transition evidence is recommended for Core
+and required for ACFS-Governance as defined in
+[Lifecycle](../specifications/lifecycle.md#transition-history).
 
 Provenance SHOULD identify:
 
@@ -93,7 +96,11 @@ Initial risk classes are:
 - **High risk**: executable capabilities, policies, authority changes, triggers,
   records that affect tool use, or records that may cause future actions.
 
-High-risk records SHOULD require review before becoming active.
+High-risk capabilities MUST receive explicit authorization under
+[Lifecycle](../specifications/lifecycle.md#promotion) before becoming active.
+Review of other high-risk records is RECOMMENDED; all activation still requires
+applicable policy or authorized review. Omitting or understating a `risk` value
+MUST NOT bypass authorization required by the record's actual behavior.
 
 Records that affect production systems, credentials, user identity, financial
 activity, security controls, legal obligations, or persistent policy SHOULD be
@@ -101,8 +108,15 @@ treated as high risk.
 
 ## Review and Promotion
 
-Promotion is the point where a draft capability may become reusable future
-behavior.
+Promotion changes a record from draft to active. Initial active creation and
+reactivation are subject to the same authorization rules in
+[Lifecycle](../specifications/lifecycle.md#promotion).
+
+Activation MUST be permitted by applicable policy or authorized review for the
+record and scope. Established policy MAY automatically activate low-risk
+records without separate human approval. High-risk capabilities MUST receive
+explicit authorization covering their behavior, scope, and relevant risk; a
+permission to write records or activate low-risk notes is insufficient.
 
 Implementations SHOULD define explicit review policy for each scope.
 
@@ -115,7 +129,12 @@ Review policy SHOULD define:
 - Which risks prevent activation.
 - Which Authorities may resolve conflicts.
 
-A Contributor is not automatically authorized to promote its own record.
+A Contributor MUST NOT gain approval authority merely by submitting a record.
+Self-review is permitted only when independently authorized by applicable policy.
+ACFS-Governance implementations MUST retain the
+[minimum decision and transition evidence](../specifications/lifecycle.md#transition-history),
+including the policy basis for automatic activation and the reason for denial
+or withdrawal. These requirements do not mandate a history on every Core record.
 
 Validation MUST NOT be treated as review, approval, trust, or acceptance.
 
@@ -126,11 +145,14 @@ Retrieval can cause records to influence future behavior.
 Default behavioral retrieval SHOULD return active records within the requested
 scope.
 
-Draft, superseded, and revoked records SHOULD NOT be returned for behavioral
-guidance unless the retrieval mode explicitly permits them and the Consumer is
-authorized.
+Draft records MAY be exposed for authorized review or drafting, not as default
+guidance. Known superseded records MUST NOT remain authoritative guidance; they
+MAY be exposed as clearly identified historical or explanatory context. Audit
+visibility does not confer behavioral eligibility.
 
-Revoked records MUST NOT be returned for behavioral guidance.
+Consumers and implementations MUST NOT knowingly return or use revoked or
+superseded records as authoritative guidance. Policy-authorized offline use
+follows [Projection](../specifications/projection.md#caching-and-indexing).
 
 Draft capability records MUST NOT be returned as reusable behavior by default.
 
@@ -141,9 +163,28 @@ authorized Consumer.
 
 Implementations MUST support revocation.
 
-A revoked record MUST NOT guide future agent behavior.
+Consumers MUST NOT knowingly use revoked records as authoritative guidance,
+including through cached copies or projections. Revocation MUST be authorized
+for the affected scope. Applicable policy MAY permit cached or offline guidance
+within a defined validity window, scope, and risk boundaries, based on previously
+verified authorization and status. Cache validity is not approval, new authority,
+or an override of known withdrawal.
 
-Revocation SHOULD preserve metadata including:
+Fresh verification MUST precede further use on reconnection, when authorization
+expires, validity cannot be established, or policy requires it. If verification
+cannot be obtained when due, the guidance MUST be withheld. High-risk policy MAY
+require continuous connectivity or immediate revalidation; offline permission
+MUST NOT bypass those requirements. Disconnected consumers may temporarily use
+guidance revoked elsewhere until reconnection and verification, authorized
+window expiry, or earlier knowledge of withdrawal. ACFS does not promise
+instantaneous consistency across disconnected participants.
+
+Reactivation MUST obtain fresh authorization addressing the prior
+withdrawal; old approval or a cached active value is insufficient. See
+[Lifecycle](../specifications/lifecycle.md#reactivation) and
+[Projection](../specifications/projection.md#caching-and-indexing).
+
+Core implementations SHOULD preserve revocation metadata including:
 
 - Actor responsible for revocation.
 - Timestamp.
@@ -164,8 +205,12 @@ A correction SHOULD identify the record it corrects.
 
 A superseding record SHOULD identify the record it replaces.
 
-Superseded records SHOULD NOT guide new agent behavior when an active
-replacement exists within the same scope.
+Consumers MUST NOT knowingly use superseded records as authoritative guidance.
+Supersession requires applicable policy or authorized review; a replacement
+requires its own
+authorized activation. Loss of a replacement MUST NOT reactivate old guidance.
+The stronger ACFS-Governance history requirements apply to both supersession
+and revocation, including their reasons.
 
 Implementations SHOULD preserve corrected and superseded records for audit
 unless retention, privacy, or legal policy requires removal.
@@ -226,7 +271,8 @@ graph stores, object storage, MCP tools, MCP resources, or other transports.
 Transport availability MUST NOT override status, authority, scope, risk,
 retrieval, or revocation rules.
 
-Storage availability MUST NOT cause revoked records to guide future behavior.
+Storage or cache availability MUST NOT justify knowingly using withdrawn
+guidance or extending policy-authorized validity windows without verification.
 
 ## Requirements
 
@@ -234,12 +280,16 @@ ACFS-compatible implementations:
 
 - MUST treat durable record operations as security-sensitive.
 - MUST support revocation.
-- MUST prevent revoked records from guiding future behavior.
+- MUST prevent knowingly using revoked or superseded records as authoritative
+  guidance and enforce the policy-bounded offline-use rules in projection.
 - MUST preserve scope and authority boundaries.
-- SHOULD preserve provenance and audit history.
+- MUST preserve required creation provenance.
+- SHOULD preserve audit history; ACFS-Governance MUST retain the evidence
+  specified in lifecycle.
 - SHOULD apply least privilege to record operations.
 - SHOULD classify records by risk.
-- SHOULD require review before high-risk records become active.
+- MUST require explicit authorization for high-risk capability activation.
+- SHOULD require review before other high-risk records become active.
 - SHOULD support correction, supersession, redaction, and retention policy.
 - MUST NOT allow transport, storage, metadata, or relations to bypass status,
   scope, authority, risk, or revocation rules.

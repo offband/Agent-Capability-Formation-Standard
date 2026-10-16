@@ -50,15 +50,14 @@ A behavioral projection is intended to guide future agent or system behavior.
 Behavioral projections SHOULD include only active records that match the
 Consumer's authorized scope, authority, permissions, and retrieval request.
 
-Revoked records MUST NOT be projected as behavioral guidance.
+Consumers and implementations MUST NOT knowingly project or use revoked or
+superseded records as authoritative guidance. Cached observations of status
+are subject to the validity rules in [Caching and Indexing](#caching-and-indexing).
 
-Draft and superseded records SHOULD NOT be projected as behavioral guidance
-unless an implementation defines a specific safe use, such as explanatory context
-attached to an active replacement.
-
-Draft capability records MUST NOT be projected as reusable executable behavior
-unless the Consumer explicitly requested draft inspection and the projection is
-clearly marked non-active.
+Draft and superseded records MAY be included as clearly identified non-active
+review, historical, or explanatory context. Known superseded records MUST NOT
+remain authoritative guidance. Draft capability inspection MUST be clearly marked
+non-active and MUST NOT authorize reusable executable behavior.
 
 ## Audit Projection
 
@@ -127,12 +126,45 @@ behavioral guidance.
 
 Implementations MAY cache or index projections.
 
-Cached projections MUST NOT outlive ACFS status, scope, authority, risk, or
-revocation rules.
+Consumers and implementations MUST NOT knowingly use revoked or superseded
+records as authoritative guidance, even within an unexpired cache window.
+On learning of withdrawal, they MUST stop the affected behavioral use and
+invalidate, refresh, or withhold the guidance. Authorized audit copies MAY remain.
 
-When a source record is revoked, superseded, or otherwise removed from
-behavioral eligibility, implementations SHOULD invalidate or refresh any
-behavioral projection that includes it.
+Applicable policy MAY explicitly permit cached or offline guidance based on
+previously verified authorization and status. Such permission MUST define a
+bounded validity window and the permitted scope, uses, and risk boundaries.
+Implementations MUST document how the window is determined, how consumers
+establish that it remains valid, and how lifecycle changes are handled when
+received or on reconnection. An ordinary storage cache lifetime is insufficient
+unless applicable policy explicitly authorizes behavioral use for that window.
+
+Before each use, consumers MUST establish that the policy permission and its
+validity window still cover the guidance, scope, intended use, and risk, and
+that no known revocation or supersession prohibits use. This does not require
+contacting the source on each use when policy permits offline use. Consumers
+MUST obtain fresh verification before further behavioral use when cached
+authorization expires, its validity cannot be established, or applicable policy
+requires verification. If verification cannot be obtained, they MUST withhold
+the affected guidance. Reconnection MUST include verification before further
+use, rather than silently renewing the offline window from a stale copy.
+
+For high-risk operations, applicable policy MAY require continuous connectivity
+or immediate revalidation. Offline permission MUST NOT bypass these conditions,
+explicit high-risk authorization, or runtime execution restrictions.
+
+Cache validity does not grant new authority, broaden scope, constitute approval,
+or override revocation or supersession. Fresh verification checks continued
+eligibility under existing authorization; restoring a withdrawn record instead
+requires [fresh authorization](lifecycle.md#reactivation).
+
+Disconnected consumers may temporarily use guidance revoked or superseded
+elsewhere without knowing it, until reconnection and verification, expiry of
+the authorized validity window, or earlier receipt of withdrawal information.
+This is an unavoidable consistency limitation of policy-authorized offline use,
+not permission to ignore known withdrawal. ACFS prescribes no synchronization
+protocol, notification service, cache duration, or instantaneous consistency
+guarantee. Policy determines the acceptable window and risk boundaries.
 
 ## Projection Metadata
 
@@ -177,11 +209,13 @@ An MCP resource SHOULD be traceable to the ACFS records that produced it.
 ACFS-compatible implementations that support projection:
 
 - MUST treat ACFS records as the source of truth.
-- MUST NOT project revoked records as behavioral guidance.
+- MUST NOT knowingly project or use revoked or superseded records as
+  authoritative guidance.
 - MUST preserve scope, authority, status, risk, and revocation rules during
   projection.
 - SHOULD preserve traceability from projections to source records.
 - SHOULD distinguish behavioral projection from audit projection.
 - SHOULD define projection policy for each exposed surface.
-- SHOULD invalidate or refresh behavioral projections when source records lose
-  behavioral eligibility.
+- MUST enforce policy-authorized validity windows and risk boundaries for cached
+  or offline guidance, require verification when due, and stop behavioral use
+  upon learning of withdrawal, as specified above.

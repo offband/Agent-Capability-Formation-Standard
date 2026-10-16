@@ -43,8 +43,11 @@ Example:
 
 Agents MAY draft capabilities when repeated behavior emerges.
 
-Executable or behavior-shaping capabilities SHOULD remain draft until promoted
-by explicit approval or policy.
+Executable or behavior-shaping capabilities MUST remain draft until explicitly
+promoted by applicable policy or authorized review under
+[Lifecycle](lifecycle.md#promotion). Immediate activation is permitted only
+under those same authorization rules. Structural validity, repetition, and
+artifact availability do not confer authority.
 
 Draft capabilities SHOULD NOT be returned by default behavioral recall.
 
@@ -52,7 +55,12 @@ Draft capabilities SHOULD NOT be returned by default behavioral recall.
 
 Promotion makes a draft capability active.
 
-Promotion SHOULD preserve:
+The authorization and automatic-activation rules in [Lifecycle](lifecycle.md#promotion)
+apply. Contributors MUST NOT approve their own contributions merely by virtue
+of having submitted them. High-risk authorization must cover the behavior,
+scope, and relevant risk; general record-write permission is insufficient.
+
+ACFS-Capabilities implementations SHOULD preserve:
 
 - Source records or evidence.
 - Actor or reviewer.
@@ -61,7 +69,10 @@ Promotion SHOULD preserve:
 - Runtime constraints.
 
 High-risk capabilities MUST require explicit authorization before becoming
-active.
+active. Implementations also claiming ACFS-Governance MUST preserve the
+[minimum transition evidence](lifecycle.md#transition-history), including for
+policy-authorized activation; the recommendations above do not weaken that
+profile's requirements.
 
 ## Runtime Constraints
 

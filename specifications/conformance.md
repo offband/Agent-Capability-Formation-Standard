@@ -26,7 +26,10 @@ An ACFS-Records implementation MUST:
 - Preserve status and scope.
 - Preserve provenance.
 - Preserve `metadata.acfs_version: "v0.2.1"` on v0.2.1 records.
-- Prevent revoked records from guiding future behavior.
+- Prevent knowingly using revoked or superseded records as authoritative
+  guidance, including enforcement of the policy-authorized validity windows and
+  verification rules in [Projection](projection.md#caching-and-indexing) when
+  cached or offline guidance is provided.
 - Apply records only inside their declared scope unless explicitly broadened
   by policy or an authorized reviewer.
 - Support revocation and preserve the meanings of `draft`, `active`,
@@ -46,7 +49,7 @@ Validation MUST NOT be treated as approval, promotion, or execution permission.
 Core does not require an authority or risk field on every record, a reviewer
 identity provider, an event schema, a workflow engine, or a policy backend.
 Existing conditional safety requirements remain applicable when a feature is
-provided; detailed governance normalization is deferred to #5.
+provided, using the authorization rules in [Lifecycle](lifecycle.md#promotion).
 
 ## Minimum Independent Implementation
 
@@ -68,7 +71,9 @@ An ACFS-Capabilities implementation MUST support ACFS-Records and MUST:
 - Represent capability drafts as `kind=capability`.
 - Prevent draft executable or behavior-shaping capabilities from default
   behavioral recall/use.
-- Require explicit promotion before executable capabilities become active.
+- Require explicit promotion by applicable policy or authorized review before
+  executable or behavior-shaping capabilities become active, including explicit
+  authorization for high-risk capabilities as defined in [Lifecycle](lifecycle.md#promotion).
 - Preserve artifact references and runtime constraints when present.
 - Preserve provenance from source records, evidence, or review.
 
@@ -79,11 +84,26 @@ ACFS-Governance covers review, authority, risk, and transition history.
 An ACFS-Governance implementation MUST support ACFS-Records and MUST:
 
 - Preserve authority and risk when supplied or required by policy.
-- Preserve review and promotion events.
-- Distinguish contributors from reviewers or authorities.
-- Require authorized review for high-risk activation.
-- Preserve reasons for rejection, promotion, supersession, and revocation when
-  available.
+- Preserve review and promotion decisions, including denials, and the minimum
+  [transition evidence](lifecycle.md#transition-history) for activation,
+  supersession, revocation, reactivation, and scope or authority changes.
+- Distinguish contributor, transition actor, reviewer, authorizing policy, and
+  applicable authority, even where one actor performs multiple authorized roles.
+- Require explicit authorization for high-risk activation by applicable policy
+  or authorized review; ordinary write permission is insufficient.
+- Preserve the effective timestamp, prior and resulting status, affected scope,
+  applicable authority, authorization basis, and reason as specified in lifecycle.
+- Make the evidence inspectable by authorized consumers through a documented
+  representation, without requiring a particular history schema.
+
+Governance evidence identifies the authorization basis; a cached copy of that
+evidence does not itself approve use, renew authority, or override withdrawal.
+Policy-authorized offline use follows the validity windows, risk boundaries,
+and verification rules in [Projection](projection.md#caching-and-indexing).
+
+These stronger evidence requirements do not add required fields to every Core
+record. Automatic activation remains permitted by applicable policy; a separate
+human reviewer is not mandatory.
 
 ## ACFS-Relations
 
@@ -106,7 +126,8 @@ retrieval.
 An ACFS-Retrieval implementation MUST support ACFS-Records and MUST:
 
 - Distinguish behavioral recall from audit retrieval.
-- Prevent revoked records from behavioral recall.
+- Prevent knowingly returning revoked or superseded records as authoritative
+  guidance; cached recall follows the validity and verification rules in projection.
 - Expose status in retrieval results.
 - Enforce scope during behavioral recall.
 
