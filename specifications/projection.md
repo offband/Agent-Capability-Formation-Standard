@@ -1,7 +1,8 @@
 # Projection
 
 Projection defines how ACFS records become visible through external retrieval or
-interaction surfaces.
+interaction surfaces. Projection support is optional and is not a Core service.
+The requirements here apply to implementations that provide projections.
 
 ACFS records are the source of truth. A projection is a policy-governed view of
 one or more records for a specific Consumer, scope, transport, or use case.

@@ -1,28 +1,30 @@
 # Implementation Boundary
 
-ACFS is a portable standard for addressable and recallable agent memory and
-capability. It is not an application framework, workflow engine, storage
-product, agent runtime, user interface, billing system, or orchestration layer.
+ACFS is a portable standard for governed, reusable agent context. It is not an
+application framework, workflow engine, storage product, agent runtime, user
+interface, billing system, or orchestration layer.
 
-An ACFS-compatible implementation may be simple or full-featured. The standard
-only requires that portable durable records and capability guidance preserve the
-ACFS rules for identity, kind, status, scope, provenance, relations, recall,
-promotion, supersession, and revocation.
+An ACFS-compatible implementation MUST support ACFS-Records. The authoritative
+minimum contract is [Conformance](conformance.md); record fields and their
+meanings are defined in [ACFS Records](records.md).
 
 ## Core Standard Concepts
 
-ACFS Core centers on four concepts:
+The governed contextual record is the foundational primitive. Core preserves
+identity, kind, content, status, scope, version metadata, and provenance, with
+base lifecycle and safe-use rules. `capability` is an existing record kind;
+its presence does not require a formation or execution service. Relations,
+authority, and risk remain optional fields, with existing preservation and
+safety rules applying when supplied.
 
-- **Record**: a durable scoped object that can be recalled, audited, revised,
-  superseded, or revoked.
-- **Capability**: a record that describes reusable behavior, procedure, skill,
-  prompt, or runtime reference without itself granting execution permission.
-- **Recall and state capsules**: retrieval and compact briefings intended to
-  guide future behavior, constrained by
-  status, scope, provenance, authority, risk, and revocation.
+Capability formation services, richer governance, graph operations, retrieval
+and state capsules, projections, MCP, and portable exchange services are
+optional. Providing one does not make every other optional profile mandatory.
+Implementations MUST NOT use an optional feature to bypass Core safety rules.
 
-Implementations SHOULD keep these concepts visible at the boundary where data is
-exported, imported, projected, recalled, or shared with another agent system.
+No particular storage, indexing, transport, authentication, communication,
+scheduling, or execution mechanism is required. FlowOS, MCP, GitHub, and specific
+agent runtimes are not dependencies.
 
 ## Runtime Concepts
 
@@ -42,8 +44,8 @@ Runtimes MAY define richer implementation concepts such as:
 - billing or entitlement state
 - agent session state
 
-These concepts are not part of the ACFS base profile unless the implementation
-maps them to ACFS records, relations, metadata, or a documented extension.
+Mapping these concepts to ACFS records, relations, metadata, or an extension
+does not make their runtime services part of Core.
 
 Runtime concepts MUST NOT bypass ACFS status, scope, provenance, promotion,
 recall, supersession, or revocation rules when they are used as behavioral
@@ -107,7 +109,8 @@ ACFS-compatible implementations:
 
 - MUST preserve ACFS-required fields at portable boundaries.
 - MUST prevent revoked records from guiding behavior.
-- MUST keep behavioral recall constrained by status and scope.
+- MUST keep behavioral use constrained by status and scope, including recall
+  when provided.
 - MUST NOT let runtime objects bypass promotion or revocation rules.
 - SHOULD map artifacts, actions, runs, triggers, and packages to ACFS records,
   relations, metadata, or documented extensions when portability matters.

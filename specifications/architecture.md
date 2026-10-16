@@ -4,23 +4,24 @@ Architecture defines the responsibilities an ACFS-compatible system preserves
 when it stores durable records for agents.
 
 ACFS does not require a specific runtime, storage engine, transport, framework,
-or deployment model. The base architecture is intentionally small: write scoped
-records, index them, recall the records that matter, and prevent revoked or
-out-of-scope records from shaping behavior.
+or deployment model. ACFS Core is ACFS-Records as defined in
+[Conformance](conformance.md): governed contextual records and their safe-use
+semantics. Indexing, recall, and state capsule services are optional.
 
 ACFS defines the portable boundary for durable memory and capability. A runtime
 or product built on ACFS may add local storage, user interfaces, action
 execution, run history, artifacts, triggers, packages, billing, hosted identity,
 or agent coordination. Those implementation concepts are outside the base ACFS
-architecture unless they are represented as ACFS records, relations, metadata,
-or documented extensions.
+architecture. Representing them as ACFS records, relations, metadata, or
+extensions does not make their runtime services Core requirements.
 
 ## Purpose
 
 ACFS separates durable agent records from chat history, scratchpads, logs,
 message buses, and application state.
 
-An ACFS-compatible architecture allows agentic systems to:
+The following capabilities illustrate a system supporting additional profiles;
+they are not a checklist of Core services:
 
 - Write small durable records.
 - Preserve provenance and scope.
@@ -95,14 +96,16 @@ A Record Store SHOULD support:
 
 A Record Store MUST NOT treat storage alone as ACFS compatibility. Base
 compatibility requires preserving required record fields, status, provenance,
-scope, default retrieval behavior, and revocation rules.
+scope, behavioral-use constraints, and revocation rules. The service
+recommendations above do not add mandatory Core operations.
 
 ## Validation Boundary
 
 Validation is a structural boundary, not a trust boundary.
 
-A Record Store MAY validate that a record includes required fields, valid status,
-valid kind, declared scope, provenance metadata, and relation metadata.
+An ACFS-Records store MUST validate record structure, including required fields,
+valid status, valid kind, declared scope, provenance metadata, and relation
+metadata when present.
 
 Validation MUST NOT be treated as truth, safety, authorization, or promotion.
 

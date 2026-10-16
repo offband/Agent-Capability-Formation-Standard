@@ -1,6 +1,7 @@
 # ACFS Records
 
-An ACFS Record is the base primitive of ACFS v0.2.1.
+An ACFS Record is the governed contextual record and foundational primitive of
+ACFS v0.2.1. ACFS Core is ACFS-Records as defined in [Conformance](conformance.md).
 
 It is a durable, addressable, scoped object that preserves agent-contributed
 workspace context so future agents can recall and reuse it without reading long
@@ -38,7 +39,6 @@ An implementation MAY add and preserve:
   "relations": [{"type": "supersedes", "target": "acfs:record:..."}],
   "authority": "organization:example",
   "risk": "low|medium|high",
-  "metadata": {},
   "expires_at": "2026-09-15T00:00:00Z",
   "updated_at": "2026-08-15T00:00:00Z"
 }
@@ -76,6 +76,13 @@ The `body` field contains the primary durable content.
 The `provenance` field identifies the actor, timestamp, and source that created
 the record.
 
+The required `metadata` object contains `acfs_version`, which MUST be `v0.2.1`
+for records claiming this version. `provenance` requires `actor`, `created_at`,
+and `source`. See the existing [JSON schema](../schemas/acfs-record.schema.json)
+for structural constraints. Structural validity does not confer authority.
+Additional metadata entries may contain implementation-specific data. Metadata
+MUST NOT bypass status, scope, revocation, or promotion rules.
+
 ## Optional Fields
 
 The `summary` field is a compact recall summary. Implementations MAY generate it
@@ -88,15 +95,10 @@ are not required.
 
 The `authority` field identifies the person, organization, policy boundary, or
 system responsible for trust decisions. It is optional in ACFS-Records and
-required only by governance profiles.
+required only when a claimed governance profile or policy requires it.
 
 The `risk` field classifies behavioral impact. It is optional in ACFS-Records
-and required only by governance profiles.
-
-The `metadata` field contains ACFS version metadata and implementation-specific
-data. `metadata.acfs_version` MUST be `v0.2.1` for records claiming this
-version. Metadata MUST NOT bypass status, scope, revocation, or promotion
-rules.
+and required only when a claimed governance profile or policy requires it.
 
 ## Status Rules
 

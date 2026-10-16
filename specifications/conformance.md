@@ -3,9 +3,17 @@
 Conformance defines how implementations describe which ACFS v0.2.1 requirements
 they support.
 
-ACFS Core covers durable records, scoped recall, state capsules, and capability
-lifecycle. Implementations SHOULD publish a conformance declaration that lists
-supported profiles and extensions.
+**ACFS Core is ACFS-Records.** This document defines the minimum compatibility
+contract and the additional requirements of optional profiles. The record shape
+is defined in [ACFS Records](records.md); base status and scope meanings are
+specified in [Lifecycle](lifecycle.md) and [Scope and Authority](scope-and-authority.md).
+Implementations SHOULD publish a conformance declaration listing supported
+profiles and extensions.
+
+Core requires governed contextual records, not a particular service API. The
+presence of a capability kind, relation field, or authority metadata does not
+require formation, graph, or governance services. Optional features MUST NOT
+bypass Core status, scope, provenance, or revocation rules.
 
 ## ACFS-Records
 
@@ -19,8 +27,37 @@ An ACFS-Records implementation MUST:
 - Preserve provenance.
 - Preserve `metadata.acfs_version: "v0.2.1"` on v0.2.1 records.
 - Prevent revoked records from guiding future behavior.
-- Distinguish behavioral recall from audit retrieval.
-- Support import/export of records using the v0.2.1 record shape.
+- Apply records only inside their declared scope unless explicitly broadened
+  by policy or an authorized reviewer.
+- Support revocation and preserve the meanings of `draft`, `active`,
+  `superseded`, and `revoked`.
+- Distinguish behavioral use from audit inspection when exposing records;
+  this does not require separate retrieval APIs.
+- Prevent draft executable or behavior-shaping capabilities from default
+  behavioral use and require explicit promotion by policy or authorized review
+  before they become active guidance, when such capabilities are supported.
+- Preserve relation type and target identifier when relations are present.
+
+ACFS-Records implementations SHOULD support import/export using the v0.2.1
+record shape. Core does not mandate an import/export service; ACFS-Portable
+adds exchange-specific expectations.
+
+Validation MUST NOT be treated as approval, promotion, or execution permission.
+Core does not require an authority or risk field on every record, a reviewer
+identity provider, an event schema, a workflow engine, or a policy backend.
+Existing conditional safety requirements remain applicable when a feature is
+provided; detailed governance normalization is deferred to #5.
+
+## Minimum Independent Implementation
+
+A local file store can validate and retain the record in the README using
+`schemas/acfs-record.schema.json`, preserve its identifier, version and
+provenance, and constrain use to its declared scope and status. It can mark a
+withdrawn record `revoked` and exclude it from guidance while retaining it for
+inspection. A documented local read/write process is sufficient; no recall
+ranking, state capsule, promotion endpoint, FlowOS, MCP, GitHub, or agent runtime
+is required. A second implementation can interpret the same record meanings
+without adopting the first implementation's storage or APIs.
 
 ## ACFS-Capabilities
 
