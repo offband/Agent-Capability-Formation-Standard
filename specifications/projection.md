@@ -52,13 +52,10 @@ Consumer's authorized scope, authority, permissions, and retrieval request.
 
 Revoked records MUST NOT be projected as behavioral guidance.
 
-Draft and superseded records SHOULD NOT be projected as behavioral guidance
-unless an implementation defines a specific safe use, such as explanatory context
-attached to an active replacement.
-
-Draft capability records MUST NOT be projected as reusable executable behavior
-unless the Consumer explicitly requested draft inspection and the projection is
-clearly marked non-active.
+Draft and superseded records MAY be included as clearly identified non-active
+review, historical, or explanatory context. Superseded records MUST NOT remain
+authoritative guidance. Draft capability inspection MUST be clearly marked
+non-active and MUST NOT authorize reusable executable behavior.
 
 ## Audit Projection
 
@@ -131,8 +128,20 @@ Cached projections MUST NOT outlive ACFS status, scope, authority, risk, or
 revocation rules.
 
 When a source record is revoked, superseded, or otherwise removed from
-behavioral eligibility, implementations SHOULD invalidate or refresh any
-behavioral projection that includes it.
+behavioral eligibility, implementations MUST prevent cached or projected copies
+from continuing to act as authoritative guidance. They MAY invalidate, refresh,
+or withhold the affected guidance; audit copies may remain available when
+authorized. A cached `active` value or an unexpired cache lifetime MUST NOT
+override a later revocation or supersession.
+
+Implementations providing cached behavioral guidance MUST document how current
+eligibility is established before use and how lifecycle changes reach consumers.
+Consumers MUST NOT use a cached copy as guidance if current eligibility cannot
+be established. ACFS does not prescribe polling, notifications, a cache lifetime,
+or a distributed consistency protocol, and does not guarantee instantaneous
+notification across disconnected participants. Lack of connectivity is not
+permission to rely on stale approval. Reactivation requires
+[fresh authorization](lifecycle.md#reactivation).
 
 ## Projection Metadata
 
@@ -183,5 +192,5 @@ ACFS-compatible implementations that support projection:
 - SHOULD preserve traceability from projections to source records.
 - SHOULD distinguish behavioral projection from audit projection.
 - SHOULD define projection policy for each exposed surface.
-- SHOULD invalidate or refresh behavioral projections when source records lose
-  behavioral eligibility.
+- MUST prevent cached or projected copies from continuing as authoritative
+  guidance when source records lose behavioral eligibility, as specified above.

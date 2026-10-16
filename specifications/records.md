@@ -107,8 +107,9 @@ Default behavioral recall SHOULD return only `active` records.
 `draft` records MAY be returned for review, drafting, or audit. They SHOULD NOT
 be used as default behavioral guidance.
 
-`superseded` records SHOULD NOT guide future behavior when an active replacement
-exists.
+`superseded` records MUST NOT remain authoritative guidance. They MAY be exposed
+as clearly identified historical or explanatory context, as specified in
+[Lifecycle](lifecycle.md#superseded).
 
 `revoked` records MUST NOT guide future behavior.
 

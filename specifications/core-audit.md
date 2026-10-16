@@ -41,28 +41,42 @@ than mandatory relaxes an inconsistent service obligation; consumers must not
 infer an exchange API solely from a Core claim. Existing broader implementations
 can continue supporting their current services and declaring optional profiles.
 
-## Deferred Governance Questions — Issue #5
+## Governance Refinement — Issue #5
 
-- Normalize the strength and conditions of promotion language: README and
-  ACFS-Capabilities require explicit promotion for executable or behavior-shaping
-  capability guidance, while formation and lifecycle also use SHOULD wording.
-  Lifecycle permits explicit policy for immediate activation. Clarify what
-  constitutes policy authorization and what evidence is needed, without a new
-  state or mandatory governance backend. This pass preserves the existing
-  safety constraints and does not define a new transition protocol.
-- Clarify recording versus proposing versus approving for non-capability kinds.
-  `active` expresses eligibility within scope, not universal truth, execution
-  permission, or proof of review. Low-risk automatic activation remains allowed
-  by existing policy semantics; no universal human-review requirement is added.
-- Reconcile optional authority/risk fields with governance and high-risk policy
-  obligations. Decide when supplied authority and reviewer evidence are
-  sufficient; do not infer an organizational hierarchy from Core.
-- Normalize promotion terminology (all draft-to-active records in lifecycle,
-  capability-focused wording elsewhere), revocation reversal, and replacement
-  handling. Retain the four current statuses until reviewed.
-- Clarify the distinction between non-active explanatory/audit context and
-  behavioral guidance. Revoked records remain prohibited as guidance in every
-  mode, regardless of wording about authorized non-active inspection.
+The #4 audit identified contradictory MUST/SHOULD promotion language, policy
+exceptions without a shared authorization definition, optional transition
+reasons, and unclear withdrawal and cache behavior. Issue #5 resolves these in
+[Lifecycle](lifecycle.md), with corresponding changes in formation, scope and
+authority, conformance, trust and safety, record status rules, and projection.
+
+| Prior inconsistency | Normalized rule |
+| --- | --- |
+| Lifecycle allowed immediate policy activation while formation only recommended keeping capabilities draft and conformance required promotion. | All activation needs applicable policy or authorized review; explicit policy-authorized initial activation counts as the promotion decision for capabilities. No stored intermediate draft is required. |
+| Promotion meant draft-to-active for records in lifecycle but only capabilities in safety text. | Promotion means draft-to-active for any record; initial activation and reactivation obey the same authorization rules. |
+| High-risk capability authorization was mandatory in some documents but review only recommended elsewhere. | Explicit authorization must cover high-risk capability behavior, scope, and risk. A write permission or low-risk auto-activation rule is insufficient; human review is not universally required. |
+| Contributor/reviewer identity and authority metadata could be conflated. | Submission does not grant approval authority. Self-review requires independent policy authorization. Governance evidence identifies the roles and applicable authority; Core does not acquire a mandatory authority field. |
+| Governance transition history only required reasons “when available.” | Governance requires inspectable record/contributor, transition actor, reviewer or authorizing policy, applicable authority, timestamp, prior/resulting status and scope, and reason. Initial/automatic activation and scope/authority changes are included. |
+| Superseded guidance was only discouraged, and cache refresh only recommended. | Superseded records cannot remain authoritative, revoked records lose eligibility, cached copies cannot override withdrawal, and reactivation requires fresh authorization. Historical inspection remains possible. |
+
+The three required edge cases are documented as semantic outcomes in
+[Lifecycle](lifecycle.md#required-edge-cases): valid submission without approval
+authority, low-risk policy activation, and revocation while a participant holds
+a cached active copy. These are not the full cross-agent fixtures for #7.
+
+The v0.2.1 record shape, four statuses, seven kinds, schemas, and JSON examples
+remain unchanged. Stronger governance evidence can use existing metadata,
+provenance extensions, related records, or inspectable implementation history;
+there is no new mandatory event schema. Existing Core records remain valid.
+Implementations claiming ACFS-Governance may need to retain more evidence than
+before, especially reasons and policy bases. Implementations relying on
+superseded guidance, implicit self-approval, or stale active caches must change
+that behavior to meet the clarified safety contract. Structural validation
+alone does not demonstrate this semantic conformance.
+
+ACFS does not supply policy evaluation, identity verification, cache delivery,
+or instantaneous revocation notifications. Implementations must document their
+eligibility and evidence handling; unsupported evidence or uncertain current
+eligibility cannot be made authoritative by a valid JSON shape.
 
 ## Deferred Schema and Conformance Questions — Issue #6
 
@@ -71,8 +85,19 @@ can continue supporting their current services and declaring optional profiles.
   advertisement rules without silently widening the base enums. Additional
   properties do not make enum extensions schema-valid.
 - Decide how governance evidence and mandatory-extension declarations are
-  validated. Current metadata is open-ended; schema validity cannot certify
-  these semantics or safe behavioral use.
+  validated. Issue #5 defines the evidence meanings, not a canonical encoding.
+  Current metadata is open-ended; schema validity cannot certify authorization
+  or safe behavioral use. Decide interoperable discovery/reference handling,
+  timestamp representation, and policy identification across implementations,
+  including how to retain the policy basis in effect at decision time.
+- Define conformance checks for missing or inaccessible governance evidence,
+  denied activation, initial active creation with no prior status, scope or
+  authority changes with unchanged status, and freshly authorized reactivation.
+  Do not treat all structurally valid active records as approved.
+- Clarify preservation of external history references and their authorization
+  basis during exchange, including unavailable evidence and stale copies.
+  Issue #5 specifies safe-use constraints, not a synchronization or distributed
+  freshness protocol; do not imply that a schema proves current eligibility.
 - Separate structural fixture validation from behavioral conformance checks.
   `examples/invalid/revoked-behavioral-retrieval.json` is a legacy-shaped
   retrieval envelope demonstrating unsafe behavior, not a v0.2.1 record-schema
@@ -93,5 +118,5 @@ can continue supporting their current services and declaring optional profiles.
 The README record and conformance's file-store illustration show the minimum
 portable contract without a runtime dependency. The complete cross-agent
 capture, approval, discovery, reuse, and correction scenario remains #7, after
-#5 and #6 resolve governance evidence and schema expectations. No new lifecycle
-fixture or runtime demonstration is introduced here.
+#6 aligns schema and conformance with the governance meanings established in
+#5. No new lifecycle fixture or runtime demonstration is introduced here.

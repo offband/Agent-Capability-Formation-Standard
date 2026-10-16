@@ -3,8 +3,9 @@
 Scope defines where an ACFS Record may influence future behavior.
 
 Authority identifies who is responsible for trust decisions within a scope.
-Authority is optional in the base ACFS-Records profile and required only by
-governance profiles or workspace policy.
+The record-level `authority` field is optional in ACFS-Records. Applicable
+authority must be identifiable in ACFS-Governance decision evidence, but need
+not be stored as a field on every record. Policy may require that field.
 
 ## Scope
 
@@ -20,7 +21,13 @@ Examples:
 - `workflow:release`
 
 Consumers MUST NOT apply a record outside its declared scope unless an explicit
-policy or authorized reviewer broadens that scope.
+policy or authorized reviewer broadens that scope. Scope expansion and changes
+to applicable authority MUST be authorized for the affected boundary, including
+the destination scope; write access in the original scope is insufficient.
+Copying, importing, nesting, or projecting a record MUST NOT implicitly broaden
+scope or authority. Existing activation approval MUST NOT be assumed to cover a
+broader scope. ACFS-Governance MUST retain the prior and resulting scope and
+authority with the [transition evidence](lifecycle.md#transition-history).
 
 ## Scope Format
 
@@ -62,8 +69,17 @@ system:flowos-policy-engine
 {"type": "organization", "id": "example"}
 ```
 
-ACFS-Governance implementations MUST distinguish the actor that submitted a
-record from the authority or reviewer that promoted it.
+A contributor supplies the content; a reviewer makes an approval decision; an
+authorizing policy permits a decision under its applicable rule; the applicable
+authority is the trust boundary permitting that reviewer or policy to act.
+These roles MUST NOT be inferred to be identical. The record's `authority`
+value names a boundary, not proof that a reviewer is authorized within it.
+
+ACFS-Governance implementations MUST distinguish these roles in the
+[minimum transition evidence](lifecycle.md#transition-history). A contributor
+MAY be a reviewer only when independently authorized by applicable policy;
+submission alone MUST NOT confer approval authority. ACFS prescribes no identity
+provider, organizational hierarchy, approval mechanism, or policy language.
 
 ## Nested Scope
 
@@ -87,5 +103,6 @@ ACFS-compatible implementations:
 - MUST require scope on each record.
 - MUST NOT apply records outside declared scope without authorization.
 - SHOULD preserve scope changes.
-- SHOULD require authority for high-risk promotion and governance profiles.
+- MUST require explicit authorization for high-risk capability activation;
+  authority evidence is required by ACFS-Governance, not as a universal Core field.
 - MUST NOT allow scope or authority rules to bypass status or revocation.

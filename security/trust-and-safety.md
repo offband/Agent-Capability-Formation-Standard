@@ -45,7 +45,7 @@ A Contributor SHOULD only be allowed to write records within authorized scopes.
 A Consumer SHOULD only retrieve records appropriate to its task, authority, trust
 level, risk tolerance, and execution context.
 
-A Reviewer SHOULD only change status within scopes where it is authorized to
+A Reviewer MUST only change status within scopes where it is authorized to
 act.
 
 Authority changes, scope broadening, revocation reversal, and high-risk
@@ -53,7 +53,10 @@ promotion SHOULD require stricter authorization than ordinary record writes.
 
 ## Provenance
 
-ACFS-compatible systems SHOULD preserve provenance for each ACFS record.
+ACFS-compatible systems MUST preserve required creation provenance for each
+ACFS record. Additional review and transition evidence is recommended for Core
+and required for ACFS-Governance as defined in
+[Lifecycle](../specifications/lifecycle.md#transition-history).
 
 Provenance SHOULD identify:
 
@@ -93,7 +96,11 @@ Initial risk classes are:
 - **High risk**: executable capabilities, policies, authority changes, triggers,
   records that affect tool use, or records that may cause future actions.
 
-High-risk records SHOULD require review before becoming active.
+High-risk capabilities MUST receive explicit authorization under
+[Lifecycle](../specifications/lifecycle.md#promotion) before becoming active.
+Review of other high-risk records is RECOMMENDED; all activation still requires
+applicable policy or authorized review. Omitting or understating a `risk` value
+MUST NOT bypass authorization required by the record's actual behavior.
 
 Records that affect production systems, credentials, user identity, financial
 activity, security controls, legal obligations, or persistent policy SHOULD be
@@ -101,8 +108,15 @@ treated as high risk.
 
 ## Review and Promotion
 
-Promotion is the point where a draft capability may become reusable future
-behavior.
+Promotion changes a record from draft to active. Initial active creation and
+reactivation are subject to the same authorization rules in
+[Lifecycle](../specifications/lifecycle.md#promotion).
+
+Activation MUST be permitted by applicable policy or authorized review for the
+record and scope. Established policy MAY automatically activate low-risk
+records without separate human approval. High-risk capabilities MUST receive
+explicit authorization covering their behavior, scope, and relevant risk; a
+permission to write records or activate low-risk notes is insufficient.
 
 Implementations SHOULD define explicit review policy for each scope.
 
@@ -115,7 +129,12 @@ Review policy SHOULD define:
 - Which risks prevent activation.
 - Which Authorities may resolve conflicts.
 
-A Contributor is not automatically authorized to promote its own record.
+A Contributor MUST NOT gain approval authority merely by submitting a record.
+Self-review is permitted only when independently authorized by applicable policy.
+ACFS-Governance implementations MUST retain the
+[minimum decision and transition evidence](../specifications/lifecycle.md#transition-history),
+including the policy basis for automatic activation and the reason for denial
+or withdrawal. These requirements do not mandate a history on every Core record.
 
 Validation MUST NOT be treated as review, approval, trust, or acceptance.
 
@@ -126,9 +145,10 @@ Retrieval can cause records to influence future behavior.
 Default behavioral retrieval SHOULD return active records within the requested
 scope.
 
-Draft, superseded, and revoked records SHOULD NOT be returned for behavioral
-guidance unless the retrieval mode explicitly permits them and the Consumer is
-authorized.
+Draft records MAY be exposed for authorized review or drafting, not as default
+guidance. Superseded records MUST NOT remain authoritative guidance; they MAY
+be exposed as clearly identified historical or explanatory context. Audit
+visibility does not confer behavioral eligibility.
 
 Revoked records MUST NOT be returned for behavioral guidance.
 
@@ -141,9 +161,14 @@ authorized Consumer.
 
 Implementations MUST support revocation.
 
-A revoked record MUST NOT guide future agent behavior.
+A revoked record MUST NOT guide future agent behavior, including through
+cached copies or projections. Revocation MUST be authorized for the affected
+scope. Reactivation MUST obtain fresh authorization addressing the prior
+withdrawal; old approval or a cached active value is insufficient. See
+[Lifecycle](../specifications/lifecycle.md#reactivation) and
+[Projection](../specifications/projection.md#caching-and-indexing).
 
-Revocation SHOULD preserve metadata including:
+Core implementations SHOULD preserve revocation metadata including:
 
 - Actor responsible for revocation.
 - Timestamp.
@@ -164,8 +189,11 @@ A correction SHOULD identify the record it corrects.
 
 A superseding record SHOULD identify the record it replaces.
 
-Superseded records SHOULD NOT guide new agent behavior when an active
-replacement exists within the same scope.
+Superseded records MUST NOT remain authoritative guidance. Supersession
+requires applicable policy or authorized review; a replacement requires its own
+authorized activation. Loss of a replacement MUST NOT reactivate old guidance.
+The stronger ACFS-Governance history requirements apply to both supersession
+and revocation, including their reasons.
 
 Implementations SHOULD preserve corrected and superseded records for audit
 unless retention, privacy, or legal policy requires removal.
@@ -236,10 +264,13 @@ ACFS-compatible implementations:
 - MUST support revocation.
 - MUST prevent revoked records from guiding future behavior.
 - MUST preserve scope and authority boundaries.
-- SHOULD preserve provenance and audit history.
+- MUST preserve required creation provenance.
+- SHOULD preserve audit history; ACFS-Governance MUST retain the evidence
+  specified in lifecycle.
 - SHOULD apply least privilege to record operations.
 - SHOULD classify records by risk.
-- SHOULD require review before high-risk records become active.
+- MUST require explicit authorization for high-risk capability activation.
+- SHOULD require review before other high-risk records become active.
 - SHOULD support correction, supersession, redaction, and retention policy.
 - MUST NOT allow transport, storage, metadata, or relations to bypass status,
   scope, authority, risk, or revocation rules.
