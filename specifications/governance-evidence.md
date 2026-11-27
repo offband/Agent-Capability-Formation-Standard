@@ -61,7 +61,12 @@ information or evidence package; no central registry or shared runtime is
 required. Consumers MUST support the declared mapping or explicitly withhold
 semantic interpretation. They MUST verify that evidence applies to the supplied
 record and decision and that the reviewer or policy is authorized for the scope
-under applicable trust policy. Names, signatures, URIs, and `status=active`
+under applicable trust policy. Evidence MUST be verifiably bound to the approved
+record revision or content, including behavior-affecting extension data. A stable
+record identifier alone is insufficient. Changes affecting the authorization
+basis MUST NOT inherit approval without verification that the approval covers
+those changes. The binding mechanism is implementation-defined and applies to
+cached evidence as well. Names, signatures, URIs, and `status=active`
 alone do not establish that authorization. ACFS mandates no identity provider,
 policy language, transport, signature mechanism, or universal event encoding.
 
