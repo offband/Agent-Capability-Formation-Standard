@@ -61,6 +61,12 @@ metadata while retaining a Core kind and base relation types. Existing optional
 metadata remains structurally valid. The new conditional declaration and
 evidence-discovery conventions may require an adapter for portable exchange;
 they do not require rewriting all existing Core records or local histories.
+Structural compatibility does not imply conformance compatibility: existing
+implementations may need adapters or revised validation. Behavioral compatibility
+is likewise conditional: previously accepted guidance may require additional
+verification before reuse. The fixture helper conservatively withholds guidance
+for invalid supported optional payloads; this is a local policy choice, not a
+universal requirement to reject optional extensions.
 
 Issue #7 should build the full cross-agent demonstration using these rules.
 It must supply concrete supported evidence mappings, independent trust inputs,
