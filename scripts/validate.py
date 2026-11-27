@@ -49,7 +49,8 @@ def extension_result(record):
     if set(required) - {EXTENSION}:
         return "unsupported-required-extension"
     if EXTENSION in declared and not conforms(record, validators[2]):
-        return "invalid-extension"
+        return ("invalid-extension" if EXTENSION in required
+                else "invalid-optional-extension")
     return None
 
 
@@ -70,6 +71,12 @@ def cached_payload(case):
             or any(cache.get(k) != record[k] for k in ("scope", "kind", "risk"))):
         return "verification-required", None
     return None, case.get("cached_evidence")
+
+
+def approved_content(record):
+    return {k: v for k, v in record.items() if k != "metadata"} | {
+        "metadata": {k: v for k, v in record["metadata"].items() if k != "governance"}
+    }
 
 
 def assess(case):
@@ -100,6 +107,9 @@ def assess(case):
     for locator in locations:
         if not isinstance(locator, dict) or len(set(locator) & {"embedded", "record", "uri"}) != 1:
             return "missing-evidence"
+        for key in ("record", "uri"):
+            if key in locator and (not isinstance(locator[key], str) or not locator[key]):
+                return "malformed-evidence"
         payload = None
         if "embedded" in locator:
             payload = locator["embedded"]
@@ -131,6 +141,10 @@ def assess(case):
         return "mismatched-evidence"
     if evidence["from"] is not None:
         return "unsupported-evidence"  # initial activation only in this mapping
+    # Synthetic content binding: compare the approved behavioral snapshot.
+    # This is not an authenticated digest or production revision mechanism.
+    if evidence.get("approved_content") != approved_content(record):
+        return "mismatched-content"
     for grant in context["grants"]:
         if (all(grant.get(k) == record[k] for k in ("scope", "kind", "risk"))
                 and grant.get("authority") == evidence["authority"]
