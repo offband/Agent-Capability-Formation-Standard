@@ -19,6 +19,7 @@ maps lifecycle meanings as follows:
 | Meaning | Example payload key |
 | --- | --- |
 | Affected record and contributor | `record`, `contributor` |
+| Approved content | `approved_content` (synthetic snapshot excluding the governance locator itself) |
 | Applying actor | `actor` |
 | Reviewer or authorizing policy | `reviewer` or `policy`; policy values identify the retained revision (`@1`) |
 | Applicable authority | `authority` |
@@ -61,3 +62,8 @@ runtime. Its constraints are in the [example schema](../extensions/procedure.sch
 A supported consumer validates base plus extension, while an unsupported
 consumer must withhold guidance requiring that interpretation. The example
 schema is illustrative and not another ACFS profile or Core schema.
+
+The helper conservatively withholds guidance for invalid supported optional
+payloads. This is a fixture policy, not a mandatory rejection rule for all
+consumers. Approved content snapshots are synthetic trust inputs, not signatures
+or a prescribed portable revision format.
