@@ -59,7 +59,7 @@ durable context and safe behavioral use:
 
 ## Record Kinds
 
-The initial record kinds are:
+The seven Core record kinds are:
 
 - **memory**: durable project context, repeated facts, or user preferences.
 - **decision**: a choice that future agents should respect inside scope.
@@ -70,7 +70,9 @@ The initial record kinds are:
 - **handoff**: concise continuity context for the next agent/session.
 - **issue**: a durable blocker, risk, bug, or unresolved question.
 
-Implementations MAY define additional kinds when documented.
+Implementations MAY define custom semantics through explicitly declared
+[extensions](specifications/versioning-and-extensions.md#extension-representation).
+Portable records retain a Core `kind`; custom kinds do not extend the base enum.
 
 ## Status
 
@@ -164,6 +166,11 @@ engines, and agent orchestration are implementation concerns. They may be
 documented as non-core notes or extensions, but they are not ACFS Core
 requirements.
 
+## Validation
+
+See [Conformance Validation](specifications/validation.md) for the lightweight,
+offline fixture checks and the distinction between shape and authorization.
+
 ## Repository Map
 
 - `specifications/records.md`: ACFS v0.2.1 base record shape and field rules
@@ -178,6 +185,8 @@ requirements.
 - `specifications/scope-and-authority.md`: scope and optional authority
 - `specifications/implementation-boundary.md`: standard/runtime boundary
 - `specifications/conformance.md`: authoritative Core contract and optional profiles
+- `specifications/governance-evidence.md`: portable evidence discovery and interpretation
+- `specifications/validation.md`: reproducible structural and semantic fixture checks
 - `specifications/core-audit.md`: compatibility findings and deferred #5–#7 work
 - `specifications/versioning-and-extensions.md`: extension/version rules
 - `specifications/workflow-artifacts.md`: non-core workflow artifact notes
@@ -185,8 +194,10 @@ requirements.
 - `security/trust-and-safety.md`: durable record safety guidance
 - `schemas/acfs-record.schema.json`: ACFS v0.2.1 record schema
 - `schemas/capability-record.schema.json`: legacy governed record schema
-- `examples/valid/`: ACFS v0.2.1 Core examples
-- `examples/invalid/`: ACFS v0.2.1 Core negative examples
+- `examples/valid/`: structurally valid v0.2.1 records, not authorization proofs
+- `examples/invalid/`: record-shape negatives and the legacy unsafe retrieval envelope
+- `examples/extensions/`: illustrative extension schema and payload fixtures
+- `examples/conformance/`: isolated semantic cases with explicit synthetic trust inputs
 - `examples/legacy/`: deprecated ACFS 0.1 compatibility examples
 
 ## License

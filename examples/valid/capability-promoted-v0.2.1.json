@@ -11,7 +11,7 @@
       "target": "acfs:record:example:capability:release-checklist"
     },
     {
-      "type": "evidence_for",
+      "type": "derived_from",
       "target": "acfs:record:example:evidence:release-checklist-passed"
     }
   ],

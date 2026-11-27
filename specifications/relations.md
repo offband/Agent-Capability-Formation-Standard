@@ -27,7 +27,12 @@ MUST preserve relation type and target identifier.
 - `evidence_for`: this record supports another record.
 - `evidence_against`: this record challenges another record.
 
-Implementations MAY define additional relation types when documented.
+Implementations MAY define custom relation semantics through explicitly declared
+[extensions](versioning-and-extensions.md#extension-representation). The seven
+values above remain the complete base `relations[].type` enum. Custom edges
+MUST be represented in the extension's namespaced metadata, not added to that
+enum. An extension definition supplies their direction and target semantics.
+Unknown custom edges MUST NOT be interpreted as base relations or authorization.
 
 ## Direction
 

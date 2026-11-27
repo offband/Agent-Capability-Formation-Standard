@@ -22,7 +22,8 @@ ACFS-Records is the minimum compatibility profile.
 An ACFS-Records implementation MUST:
 
 - Preserve required ACFS Record fields.
-- Validate record structure.
+- Validate record structure with the base schema and apply the conditional
+  [extension compatibility rules](versioning-and-extensions.md#extension-representation).
 - Preserve status and scope.
 - Preserve provenance.
 - Preserve `metadata.acfs_version: "v0.2.1"` on v0.2.1 records.
@@ -93,8 +94,9 @@ An ACFS-Governance implementation MUST support ACFS-Records and MUST:
   or authorized review; ordinary write permission is insufficient.
 - Preserve the effective timestamp, prior and resulting status, affected scope,
   applicable authority, authorization basis, and reason as specified in lifecycle.
-- Make the evidence inspectable by authorized consumers through a documented
-  representation, without requiring a particular history schema.
+- Make evidence discoverable and interpretable by authorized consumers using
+  [Governance Evidence Interchange](governance-evidence.md), without requiring
+  a universal history/event schema.
 
 Governance evidence identifies the authorization basis; a cached copy of that
 evidence does not itself approve use, renew authority, or override withdrawal.
@@ -153,8 +155,20 @@ An ACFS-Portable implementation MUST support ACFS-Records and SHOULD:
 - Export records using the v0.2.1 record shape.
 - Preserve required fields and known optional fields.
 - Document extension fields.
-- Reject, quarantine, or mark audit-only records that require unsupported
-  mandatory extensions.
+- Preserve required-extension declarations and evidence locators.
+
+The mandatory safe-handling rules for unsupported required extensions apply
+regardless of whether ACFS-Portable is claimed; the recommendations above do
+not weaken them.
+
+## Validation Claims
+
+Implementations MUST distinguish a base JSON Schema pass, extension validation,
+and semantic conformance. An active record with valid structure is not thereby
+authorized. A claim of ACFS-Governance requires the lifecycle evidence and
+interchange behavior, including explicit reasons for withholding unsupported or
+unverifiable guidance. See [Conformance Validation](validation.md) for executable
+fixture checks and their limits.
 
 ## Legacy ACFS 0.1
 

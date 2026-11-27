@@ -54,6 +54,14 @@ This shape maps to ACFS v0.2.1 as follows:
 | `provenance.contributor` | `provenance.actor` |
 | `provenance.submitted_at` | `provenance.created_at` |
 
+This table identifies corresponding field roles, not a literal renaming
+algorithm. Legacy `observation`, `procedure`, `skill`, `policy`, `run_result`,
+and other non-Core type values cannot simply be copied into `kind`. An adapter
+MUST document its mapping to one of the seven Core kinds, preserve the original
+meaning in metadata when needed, and validate the resulting record against the
+base schema. Legacy `rejected` is not approval; mapping it to an audit-only draft
+MUST NOT make it default guidance. Legacy compatibility remains optional.
+
 Legacy relation arrays SHOULD be converted to sparse relation objects when
 exporting to ACFS v0.2.1.
 

@@ -52,7 +52,7 @@ and supersession unless policy requires redaction or deletion.
 The `id` field identifies the record. It MUST be stable and unique within the
 record store.
 
-The `kind` field identifies the record's purpose. Initial kinds are:
+The `kind` field identifies the record's purpose. Core kinds are:
 
 - `memory`: durable context, repeated facts, or user preferences.
 - `decision`: a choice future agents should respect inside scope.
@@ -62,6 +62,11 @@ The `kind` field identifies the record's purpose. Initial kinds are:
 - `evidence`: support for or against another record.
 - `handoff`: continuity context for another agent/session.
 - `issue`: durable blocker, risk, bug, or unresolved question.
+
+These seven values are the complete v0.2.1 Core `kind` enum. Custom kinds MUST
+use the [extension representation](versioning-and-extensions.md#extension-representation)
+with an appropriate Core kind at the portable boundary. Declaring an extension
+does not permit extra values in `kind` or `status`.
 
 The `status` field identifies whether the record may guide future behavior.
 
